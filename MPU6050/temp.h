@@ -52,7 +52,11 @@ private:
 	int16_t temp[12];
 
 	float accXYZ[6]; 
-	float gyroXYZ[6]; 
+	float gyroXYZ[6];
+
+	float mergedAcc[3]; 
+	float mergedGyro[3]; 
+
 
 	float roll_acc,pitch_acc,roll_gyro,pitch_gyro, yaw_gyro, roll, pitch, yaw; 
 
