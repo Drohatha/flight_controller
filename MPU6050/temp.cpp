@@ -50,12 +50,10 @@
 
 
 MPU6050::MPU6050(){
-	accOffsetX = 0;
-	accOffsetY = 0;
-	accOffsetZ = 0; 
-	gyroOffsetX = 0;
-	gyroOffsetY = 0;
-	gyroOffsetZ = 0;
+	accOffset[] = {0,0,0,0,0,0};
+	gyroOffset[] = {0,0,0,0,0,0};
+
+
 
 	calculatedOffset = false;
 	firstIteration = true; 
@@ -68,13 +66,14 @@ MPU6050::MPU6050(){
 
 void MPU6050::init(){
 
+	// Creates file handles for the I2C 
 	fd1 = wiringPiI2CSetup(mpuAddress1);
 	fd2 = wiringPiI2CSetup(mpuAddress2); 
 
-	wiringPiI2CWriteReg8(fd1,powerConfig,powerCommand); // set power in
+	wiringPiI2CWriteReg8(fd1,powerConfig,powerCommand); // set power on
 	wiringPiI2CWriteReg8(fd1,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd1, gyroConfig,gyroCommand); // set gyro scale
-	wiringPiI2CWriteReg8(fd2,powerConfig,powerCommand); // set power in
+	wiringPiI2CWriteReg8(fd2,powerConfig,powerCommand); // set power on
 	wiringPiI2CWriteReg8(fd2,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd2, gyroConfig,gyroCommand); // set gyro scale
 
@@ -84,37 +83,39 @@ void MPU6050::init(){
 
 void MPU6050::read_data(){
 
-	// Sett det opp slik at vi leser de samme dataene fra mpu 1 og 2 omtrent likt! 
-
+	// Acc in x dir
 	accBuffer1[0] = wiringPiI2CReadReg8(fd1, ACCEL_X_H);
 	accBuffer1[1] = wiringPiI2CReadReg8(fd1, ACCEL_X_L);
-	accBuffer1[2] = wiringPiI2CReadReg8(fd1, ACCEL_Y_H);
-	accBuffer1[3] = wiringPiI2CReadReg8(fd1, ACCEL_Y_L);
-	accBuffer1[4] = wiringPiI2CReadReg8(fd1, ACCEL_Z_H);
-	accBuffer1[5] = wiringPiI2CReadReg8(fd1, ACCEL_Z_L);
-
-	gyroBuffer1[0] = wiringPiI2CReadReg8(fd1, GYRO_X_H);
-	gyroBuffer1[1] = wiringPiI2CReadReg8(fd1, GYRO_X_L);
-	gyroBuffer1[2] = wiringPiI2CReadReg8(fd1, GYRO_Y_H);
-	gyroBuffer1[3] = wiringPiI2CReadReg8(fd1, GYRO_Y_L);
-	gyroBuffer1[4] = wiringPiI2CReadReg8(fd1, GYRO_Z_H);
-	gyroBuffer1[5] = wiringPiI2CReadReg8(fd1, GYRO_Z_L);
-
 	accBuffer2[0] = wiringPiI2CReadReg8(fd2, ACCEL_X_H);
 	accBuffer2[1] = wiringPiI2CReadReg8(fd2, ACCEL_X_L);
+	//Acc in y dir
+	accBuffer1[2] = wiringPiI2CReadReg8(fd1, ACCEL_Y_H);
+	accBuffer1[3] = wiringPiI2CReadReg8(fd1, ACCEL_Y_L);
 	accBuffer2[2] = wiringPiI2CReadReg8(fd2, ACCEL_Y_H);
 	accBuffer2[3] = wiringPiI2CReadReg8(fd2, ACCEL_Y_L);
+	//Acc in z dir
+	accBuffer1[4] = wiringPiI2CReadReg8(fd1, ACCEL_Z_H);
+	accBuffer1[5] = wiringPiI2CReadReg8(fd1, ACCEL_Z_L);
 	accBuffer2[4] = wiringPiI2CReadReg8(fd2, ACCEL_Z_H);
 	accBuffer2[5] = wiringPiI2CReadReg8(fd2, ACCEL_Z_L);
-
+	//Gyro around x axis
+	gyroBuffer1[0] = wiringPiI2CReadReg8(fd1, GYRO_X_H);
+	gyroBuffer1[1] = wiringPiI2CReadReg8(fd1, GYRO_X_L);
 	gyroBuffer2[0] = wiringPiI2CReadReg8(fd2, GYRO_X_H);
 	gyroBuffer2[1] = wiringPiI2CReadReg8(fd2, GYRO_X_L);
+	//GYro around y axis
+	gyroBuffer1[2] = wiringPiI2CReadReg8(fd1, GYRO_Y_H);
+	gyroBuffer1[3] = wiringPiI2CReadReg8(fd1, GYRO_Y_L);
 	gyroBuffer2[2] = wiringPiI2CReadReg8(fd2, GYRO_Y_H);
 	gyroBuffer2[3] = wiringPiI2CReadReg8(fd2, GYRO_Y_L);
+	//Gyro around z axis
+	gyroBuffer1[4] = wiringPiI2CReadReg8(fd1, GYRO_Z_H);
+	gyroBuffer1[5] = wiringPiI2CReadReg8(fd1, GYRO_Z_L);
 	gyroBuffer2[4] = wiringPiI2CReadReg8(fd2, GYRO_Z_H);
 	gyroBuffer2[5] = wiringPiI2CReadReg8(fd2, GYRO_Z_L);
 
-	//Merge H and L acc data
+
+	//Merge H and L acc data for MPU 1
 	temp[0] = accBuffer1[0] <<8 | accBuffer1[1];
 	temp[1] = accBuffer1[2] <<8 | accBuffer1[3];
 	temp[2] = accBuffer1[4] <<8 | accBuffer1[5];
@@ -123,7 +124,7 @@ void MPU6050::read_data(){
 	temp[4] = gyroBuffer1[2]<<8 | gyroBuffer1[3];
 	temp[5] = gyroBuffer1[4]<<8 | gyroBuffer1[5];
 
-//Merge H and L acc data
+	//Merge H and L acc data for MPU 2
 	temp[6] = accBuffer2[0] <<8 | accBuffer2[1];
 	temp[7] = accBuffer2[2] <<8 | accBuffer2[3];
 	temp[8] = accBuffer2[4] <<8 | accBuffer2[5];
@@ -152,15 +153,34 @@ void MPU6050::read_data(){
 
 	//std::cout << "Acc X dir: " << accXYZ[0] << "\tAcc Y dir: " << accXYZ[1] << "\tAcc Z dir: " << accXYZ[2] << std::endl;
 	if(calculatedOffset){
-		accXYZ[0] -= accOffsetX;
-		accXYZ[1] -= accOffsetY;
-		accXYZ[2] -= accOffsetZ;
 
-		gyroXYZ[0] -= gyroOffsetX;
-		gyroXYZ[1] -= gyroOffsetY;
-		gyroXYZ[2] -= gyroOffsetZ;
-		//std::cout << "Acc X dir: " << accXYZ[0] << "\tAcc Y dir: " << accXYZ[1] << "\tAcc Z dir: " << accXYZ[2] << std::endl;
-		/*std::cout << "Gyro X dir: " << gyroXYZ[0] << "\t Gyro Y dir: " << gyroXYZ[1]*/ std::cout<< "Address: " << mpuAddress<< "\t Gyro Z dir: " << gyroXYZ[2] <<std::endl;
+		//Add offSet to  acc measurement
+		accXYZ[0] -= accOffset[0];
+		accXYZ[1] -= accOffset[1];
+		accXYZ[2] -= accOffset[2];
+		accXYZ[3] -= accOffset[3];
+		accXYZ[4] -= accOffset[4];
+		accXYZ[5] -= accOffset[5];
+
+		// Add offSet to gyro measurement
+		gyroXYZ[0] -= gyroOffset[0];
+		gyroXYZ[1] -= gyroOffset[1];
+		gyroXYZ[2] -= gyroOffset[2];
+		gyroXYZ[3] -= gyroOffset[3];
+		gyroXYZ[4] -= gyroOffset[4];
+		gyroXYZ[5] -= gyroOffset[5];
+
+
+		//Merge the measurements from the two different MPU6050 
+
+		mergedAcc[0] = (accXYZ[0] + accXYZ[3])/2.0; 
+		mergedAcc[1] = (accXYZ[1] + accXYZ[4])/2.0; 
+		mergedAcc[2] = (accXYZ[2] + accXYZ[5])/2.0; 
+
+		mergedGyro[0] = (gyroXYZ[0] + gyroXYZ[3])/2.0; 
+		mergedGyro[1] = (gyroXYZ[1] + gyroXYZ[4])/2.0; 
+		mergedGyro[2] = (gyroXYZ[2] + gyroXYZ[5])/2.0;
+
 
 		//calculateEulerAngles(); 
 		
@@ -171,25 +191,27 @@ void MPU6050::calculateOffset(){
 	int n = 1000; 
 	for (int i = 0; i < n; ++i){
 		read_data();
-		accOffsetX += accXYZ[0];
-		accOffsetY += accXYZ[1];
-		accOffsetZ += accXYZ[2] - gravityAcc;
-		gyroOffsetX += gyroXYZ[0];
-		gyroOffsetY += gyroXYZ[1];
-		gyroOffsetZ += gyroXYZ[2];
+		accOffset[0] += accXYZ[0];
+		accOffset[1] += accXYZ[1];
+		accOffset[2] += accXYZ[2] - gravityAcc;
+		accOffset[3] += accXYZ[3];
+		accOffset[4] += accXYZ[4];
+		accOffset[5] += accXYZ[5] - gravityAcc;
+
+		gyroOffset[0] += gyroXYZ[0];
+		gyroOffset[1] += gyroXYZ[1];
+		gyroOffset[2] += gyroXYZ[2];
+		gyroOffset[3] += gyroXYZ[3];
+		gyroOffset[4] += gyroXYZ[4];
+		gyroOffset[5] += gyroXYZ[5];
 
 	}
-	accOffsetX = accOffsetX/n;
-	accOffsetY = accOffsetY/n;
-	accOffsetZ = accOffsetZ/n; 
+	for int(int j = 0; j < 6; j++){
+		accOffset[j] = accOffset[j]/n; 
+	}
 
-	gyroOffsetX = gyroOffsetX/n;
-	gyroOffsetY = gyroOffsetY/n;
-	gyroOffsetZ = gyroOffsetZ/n;
-
-
-	std::cout << " Offset x: " << accOffsetX << " Offset y: " << accOffsetY << " Offset z:_" << accOffsetZ << std::endl;
-	std::cout << " Offset x: " << gyroOffsetX << " Offset y: " << gyroOffsetY << " Offset z:_" << gyroOffsetZ << std::endl;
+//	std::cout << " Offset x: " << accOffsetX << " Offset y: " << accOffsetY << " Offset z:_" << accOffsetZ << std::endl;
+//	std::cout << " Offset x: " << gyroOffsetX << " Offset y: " << gyroOffsetY << " Offset z:_" << gyroOffsetZ << std::endl;
 	calculatedOffset = true; 
 }
 
