@@ -49,7 +49,8 @@
 
 // Class constructor
 MPU6050::MPU6050(){
-
+	first_iteration = true; 
+	calculated_offset = false; 
 }
 
 // Class init function? Merge with constructor? 
@@ -66,83 +67,128 @@ void MPU6050::init(){
 	wiringPiI2CWriteReg8(fd_2,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd_2, gyroConfig,gyroCommand); // set gyro scale
 
+
+	calculateOffset(); 
 }
 
-void MPU6050::read_data(){
+void MPU6050::readData(){
 	// Acc data x axis
-	accDataBuffer[0] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H);
-	accDataBuffer[1] = wiringPiI2CReadReg8(fd_1, ACCEL_X_L);
-	accDataBuffer[2] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H);
-	accDataBuffer[3] = wiringPiI2CReadReg8(fd_2, ACCEL_X_L);
+	acc_data_buffer[0] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H);
+	acc_data_buffer[1] = wiringPiI2CReadReg8(fd_1, ACCEL_X_L);
+	acc_data_buffer[2] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H);
+	acc_data_buffer[3] = wiringPiI2CReadReg8(fd_2, ACCEL_X_L);
 	//Acc data y axis
-	accDataBuffer[4] = wiringPiI2CReadReg8(fd_1, ACCEL_Y_H);
-	accDataBuffer[5] = wiringPiI2CReadReg8(fd_1, ACCEL_Y_L);
-	accDataBuffer[6] = wiringPiI2CReadReg8(fd_2, ACCEL_Y_H);
-	accDataBuffer[7] = wiringPiI2CReadReg8(fd_2, ACCEL_Y_L);
+	acc_data_buffer[4] = wiringPiI2CReadReg8(fd_1, ACCEL_Y_H);
+	acc_data_buffer[5] = wiringPiI2CReadReg8(fd_1, ACCEL_Y_L);
+	acc_data_buffer[6] = wiringPiI2CReadReg8(fd_2, ACCEL_Y_H);
+	acc_data_buffer[7] = wiringPiI2CReadReg8(fd_2, ACCEL_Y_L);
 	//Acc data z axis
-	accDataBuffer[8] = wiringPiI2CReadReg8(fd_1, ACCEL_Z_H);
-	accDataBuffer[9] = wiringPiI2CReadReg8(fd_1, ACCEL_Z_L);
-	accDataBuffer[10] = wiringPiI2CReadReg8(fd_2, ACCEL_Z_H);
-	accDataBuffer[11] = wiringPiI2CReadReg8(fd_2, ACCEL_Z_L);
+	acc_data_buffer[8] = wiringPiI2CReadReg8(fd_1, ACCEL_Z_H);
+	acc_data_buffer[9] = wiringPiI2CReadReg8(fd_1, ACCEL_Z_L);
+	acc_data_buffer[10] = wiringPiI2CReadReg8(fd_2, ACCEL_Z_H);
+	acc_data_buffer[11] = wiringPiI2CReadReg8(fd_2, ACCEL_Z_L);
 	//Gyro data x axis
-	gyroDataBuffer[0] = wiringPiI2CReadReg8(fd_1,GYRO_X_H);
-	gyroDataBuffer[1] = wiringPiI2CReadReg8(fd_1,GYRO_X_L);
-	gyroDataBuffer[2] = wiringPiI2CReadReg8(fd_2,GYRO_X_H);
-	gyroDataBuffer[3] = wiringPiI2CReadReg8(fd_2,GYRO_X_L);
+	gyro_data_buffer[0] = wiringPiI2CReadReg8(fd_1,GYRO_X_H);
+	gyro_data_buffer[1] = wiringPiI2CReadReg8(fd_1,GYRO_X_L);
+	gyro_data_buffer[2] = wiringPiI2CReadReg8(fd_2,GYRO_X_H);
+	gyro_data_buffer[3] = wiringPiI2CReadReg8(fd_2,GYRO_X_L);
 	//Gyro data y axis
-	gyroDataBuffer[4] = wiringPiI2CReadReg8(fd_1,GYRO_Y_H);
-	gyroDataBuffer[5] = wiringPiI2CReadReg8(fd_1,GYRO_Y_L);
-	gyroDataBuffer[6] = wiringPiI2CReadReg8(fd_2,GYRO_Y_H);
-	gyroDataBuffer[7] = wiringPiI2CReadReg8(fd_2,GYRO_Y_L);
+	gyro_data_buffer[4] = wiringPiI2CReadReg8(fd_1,GYRO_Y_H);
+	gyro_data_buffer[5] = wiringPiI2CReadReg8(fd_1,GYRO_Y_L);
+	gyro_data_buffer[6] = wiringPiI2CReadReg8(fd_2,GYRO_Y_H);
+	gyro_data_buffer[7] = wiringPiI2CReadReg8(fd_2,GYRO_Y_L);
 	//Gyro data z axis
-	gyroDataBuffer[8] = wiringPiI2CReadReg8(fd_1,GYRO_Z_H);
-	gyroDataBuffer[9] = wiringPiI2CReadReg8(fd_1,GYRO_Z_L);
-	gyroDataBuffer[10] = wiringPiI2CReadReg8(fd_2,GYRO_Z_H);
-	gyroDataBuffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
+	gyro_data_buffer[8] = wiringPiI2CReadReg8(fd_1,GYRO_Z_H);
+	gyro_data_buffer[9] = wiringPiI2CReadReg8(fd_1,GYRO_Z_L);
+	gyro_data_buffer[10] = wiringPiI2CReadReg8(fd_2,GYRO_Z_H);
+	gyro_data_buffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
 
 	//Acc
-	accMergeBuffer[0] = accDataBuffer[0] << 8| accDataBuffer[1]; // X  from mpu 1
-	accMergeBuffer[1] = accDataBuffer[2] << 8|  accDataBuffer[3]; // X from mpu 2
+	acc_merge_buffer[0] = acc_data_buffer[0] << 8| acc_data_buffer[1]; // X  from mpu 1
+	acc_merge_buffer[1] = acc_data_buffer[2] << 8|  acc_data_buffer[3]; // X from mpu 2
 
-	accMergeBuffer[2] = accDataBuffer[4] << 8| accDataBuffer[5]; // Y from mpu 1
-	accMergeBuffer[3] = accDataBuffer[6] << 8| accDataBuffer[7]; // Y from mpu 2
+	acc_merge_buffer[2] = acc_data_buffer[4] << 8| acc_data_buffer[5]; // Y from mpu 1
+	acc_merge_buffer[3] = acc_data_buffer[6] << 8| acc_data_buffer[7]; // Y from mpu 2
 
-	accMergeBuffer[4] = accDataBuffer[8] << 8| accDataBuffer[9]; // Z from mpu 1
-	accMergeBuffer[5] = accDataBuffer[10] << 8| accDataBuffer[11]; // Z from mpu 2
+	acc_merge_buffer[4] = acc_data_buffer[8] << 8| acc_data_buffer[9]; // Z from mpu 1
+	acc_merge_buffer[5] = acc_data_buffer[10] << 8| acc_data_buffer[11]; // Z from mpu 2
 	//Gyro
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // X from mpu 1
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // X from mpu 2
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // X from mpu 1
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // X from mpu 2
 
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // Y from mpu 1
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // Y from mpu 2
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Y from mpu 1
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Y from mpu 2
 
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // Z from mpu 1
-	gyroMergeBuffer[0] = gyroDataBuffer[0] << 8| gyroDataBuffer[1]; // Z from mpu 2
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Z from mpu 1
+	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Z from mpu 2
 
 
 	//Convert to m/s^2
-	accRaw[0] = accMergeBuffer[0]*gravity/accScale;
-	accRaw[1] = accMergeBuffer[1]*gravity/accScale;
+	//X axis 
+	acc_raw[0] = acc_merge_buffer[0]*gravity/accScale;
+	acc_raw[1] = acc_merge_buffer[1]*gravity/accScale;
 	//Y axis MPU 1 & 2
-	accRaw[2] = accMergeBuffer[2]*gravity/accScale;
-	accRaw[3] = accMergeBuffer[3]*gravity/accScale;
+	acc_raw[2] = acc_merge_buffer[2]*gravity/accScale;
+	acc_raw[3] = acc_merge_buffer[3]*gravity/accScale;
 	//Z axis MPU 1 & 2
-	accRaw[4] = accMergeBuffer[4]*gravity/accScale;
-	accRaw[5] = accMergeBuffer[5]*gravity/accScale;
+	acc_raw[4] = acc_merge_buffer[4]*gravity/accScale;
+	acc_raw[5] = acc_merge_buffer[5]*gravity/accScale;
 
 	//Convert to degrees/s
-	gyroRaw[0] = gyroMergeBuffer[0]*250/angularScale; 
-	gyroRaw[1] = gyroMergeBuffer[1]*250/angularScale; 
+	gyro_raw[0] = gyro_merge_buffer[0]*250/angularScale; 
+	gyro_raw[1] = gyro_merge_buffer[1]*250/angularScale; 
 
-	gyroRaw[2] = gyroMergeBuffer[2]*250/angularScale; 
-	gyroRaw[3] = gyroMergeBuffer[3]*250/angularScale; 
+	gyro_raw[2] = gyro_merge_buffer[2]*250/angularScale; 
+	gyro_raw[3] = gyro_merge_buffer[3]*250/angularScale; 
 
-	gyroRaw[4] = gyroMergeBuffer[4]*250/angularScale; 
-	gyroRaw[5] = gyroMergeBuffer[5]*250/angularScale; 
+	gyro_raw[4] = gyro_merge_buffer[4]*250/angularScale; 
+	gyro_raw[5] = gyro_merge_buffer[5]*250/angularScale; 
 
-	
+	if(calculated_offset){
+		for (int i = 0; i < 6; ++i){
+			acc_raw[i] -= acc_offset[i];
+			gyro_raw[i] -= gyro_offset[i];
+		}
 
-	std::cout << "X from mpu 1 " << accRaw[0] << "\t X from mpu 2 " << accRaw[1] << std::endl; 
+
+	}
+
+	std::cout << "X from mpu 1 " << acc_raw[0] << "\t X from mpu 2 " << acc_raw[1] << std::endl; 
+}
+
+void MPU6050::calculateOffset(){
+	int n = 1000; 
+	for (int i = 0; i < n; ++i){
+		readData(); 
+
+		acc_offset[0] += acc_raw[0];
+		acc_offset[1] += acc_raw[1];
+		acc_offset[2] += acc_raw[2];
+		acc_offset[3] += acc_raw[3];
+		acc_offset[4] += acc_raw[4] - gravity;
+		acc_offset[5] += acc_raw[5] - gravity;
+
+		gyro_offset[0] += gyro_raw[0];
+		gyro_offset[1] += gyro_raw[1];
+		gyro_offset[2] += gyro_raw[2];
+		gyro_offset[3] += gyro_raw[3];
+		gyro_offset[4] += gyro_raw[4];
+		gyro_offset[5] += gyro_raw[5];
+
+	}
+	for (int j = 0; i < 6; ++j){
+		acc_offset[j] = acc_offset[j]/n;
+		gyro_offset[j] = gyro_offset[j]/n; 
+	}
+
+	calculated_offset = true; 
+
+
 
 }
+
+
+
+
+
 

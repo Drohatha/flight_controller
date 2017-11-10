@@ -11,21 +11,23 @@ public:
 
 	MPU6050(); 
 	void init(); 
-	void read_data(); 
+	void readData(); 
 
 private:
+	bool calculated_offset;
+	bool first_iteration;  
 
 
 	int fd_1; 
 	int fd_2; 
 
-	int accDataBuffer[12]; 
-	int gyroDataBuffer[12]; 
-	int16_t accMergeBuffer[6];
-	int16_t gyroMergeBuffer[6];  
+	int acc_data_buffer[12]; 
+	int gyro_data_buffer[12]; 
+	int16_t acc_merge_buffer[6];
+	int16_t gyro_merge_buffer[6];  
 
-	float accRaw[6]; 
-	float gyroRaw[6];
+	float acc_raw[6]; 
+	float gyro_raw[6];
 };
 
 #endif /* RASP_MPU6050_H */
