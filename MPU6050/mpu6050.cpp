@@ -1,8 +1,8 @@
-#include "mpu6050.h"
 #include <wiringPiI2C.h>
 #include <iostream>
 #include <stdint.h>
 
+#include "mpu6050.h"
 
 
 // Math constants
@@ -25,8 +25,8 @@
 
 
 // MPU6050 addresses and commands
-#define mpuAddress_1 0x68; 
-#define mpuAddress_2 0x69; 
+#define mpuAddress_1 0x68 
+#define mpuAddress_2 0x69 
 
 
 //Accelerometer 
