@@ -21,7 +21,7 @@ private:
 
 	int accDataBuffer[12]; 
 	int gyroDataBuffer[12]; 
-	int accMergeBuffer[6];
+	int16_t accMergeBuffer[6];
 	int16_t gyroMergeBuffer[6];  
 
 	float accRaw[6]; 
