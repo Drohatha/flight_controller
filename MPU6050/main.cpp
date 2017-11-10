@@ -1,6 +1,6 @@
 
 
-#include "rasp_mpu6050.h"
+#include "temp.h"
 
 
 int main(){
