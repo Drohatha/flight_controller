@@ -1,6 +1,7 @@
 #include "mpu6050.h"
 #include <wiringPiI2C.h>
-
+#include <iostream>
+#include <stdint.h>
 
 
 
