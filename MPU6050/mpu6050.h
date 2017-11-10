@@ -12,6 +12,7 @@ public:
 	MPU6050(); 
 	void init(); 
 	void readData(); 
+	void calculateEulerAngles(); 
 
 private:
 	bool calculated_offset;
@@ -28,6 +29,10 @@ private:
 
 	float acc_raw[6]; 
 	float gyro_raw[6];
+
+	float acc_offset[6];
+	float gyro_offset[6]; 
+
 };
 
 #endif /* RASP_MPU6050_H */

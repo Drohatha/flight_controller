@@ -7,7 +7,7 @@
 
 // Math constants
 #define gravity 9.81 // m/s^2 
-#define PI 3.14
+#define pi 3.14
 
 #define powerConfig 107
 #define powerCommand 0x00
@@ -182,12 +182,29 @@ void MPU6050::calculateOffset(){
 	}
 
 	calculated_offset = true; 
+}
 
+void MPU6050::calculateEulerAngles(){
+	/*
+	float duration; 
+	if(first_iteration){
+		t_last = std::chrono::system_clock::now(); 
+		first_iteration = false; 
+	}
+	//Transform the acc data to pitch and roll 
+	float temp = sqrt(pow(accXYZ[1],2)+pow(accXYZ[2],2));
+	roll_acc = 180*atan2(accXYZ[1],accXYZ[2])/pi; 
+	pitch_acc = 180*atan2(-accXYZ[0],temp)/pi;
+
+
+	t_now = std::chrono::system_clock::now(); 
+	std::chrone::duration<double> elapsed_seconds = t_now-t_last; 
+	duration = elapsed_seconds.count(); 
+	t_last = t_now; 
+*/
 
 
 }
-
-
 
 
 
