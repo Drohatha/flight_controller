@@ -11,7 +11,7 @@ class MPU6050{
 
 
 public: 
-	MPU6050(int mpu_address);
+	MPU6050();
 	void init();
 	void read_data(); // This will just spin in loop and update the values we want
 
@@ -21,8 +21,6 @@ private:
 
 	void calculateOffset(); 
 
-
-	int mpuAddress; 
 	bool calculatedOffset; 
 	bool firstIteration; 
 	float accOffsetX;

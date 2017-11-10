@@ -46,8 +46,8 @@
 #define GYRO_Z_L 72
 
 
-MPU6050::MPU6050(int mpu_address){
-	mpuAddress = mpu_address; 
+MPU6050::MPU6050(){
+
 	accOffsetX = 0;
 	accOffsetY = 0;
 	accOffsetZ = 0; 

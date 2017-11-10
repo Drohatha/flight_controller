@@ -1,6 +1,6 @@
 
 
-#include "temp.h"
+#include "mpu6050.h"
 
 
 int main(){
@@ -33,17 +33,13 @@ int main(){
 
 	}
 
-
-
 	*/
-	MPU6050 mpu_1(0x68);
-	MPU6050 mpu_2(0x69);  
-	mpu_1.init();
-	mpu_2.init();  
+ 	MPU6050 mpu; 
+	mpu.init();  
 	while(1){
 
-		mpu_1.read_data();
-		mpu_2.read_data(); 
+		mpu.read_data();
+
 	}
 		
 
