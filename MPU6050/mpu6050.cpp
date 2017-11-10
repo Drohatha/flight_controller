@@ -94,7 +94,7 @@ void MPU6050::read_data(){
 	accMergeBuffer[4] = accDataBuffer[8] << 8 | accDataBuffer[9]; // Z from mpu 1
 	accMergeBuffer[5] = accDataBuffer[10] << 8 | accDataBuffer[11]; // Z from mpu 2
 
-	std::cout << "X from mpu 1 " << accMergeBuffer[0] << "\t X from mpu 2" << std::endl; 
+	std::cout << "X from mpu 1 " << accMergeBuffer[0] << "\t X from mpu 2" <<  <<accMergeBuffer[1] << std::endl; 
 
 }
 
