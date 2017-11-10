@@ -94,7 +94,17 @@ void MPU6050::read_data(){
 	accMergeBuffer[4] = accDataBuffer[8] << 8 | accDataBuffer[9]; // Z from mpu 1
 	accMergeBuffer[5] = accDataBuffer[10] << 8 | accDataBuffer[11]; // Z from mpu 2
 
-	std::cout << "X from mpu 1 " << accMergeBuffer[0] << "\t X from mpu 2 " << accMergeBuffer[1] << std::endl; 
+	//X axis MPU 1 & 2
+	accRaw[0] = accMergeBuffer[0]*gravity/accScale;
+	accRaw[1] = accMergeBuffer[1]*gravity/accScale;
+	//Y axis MPU 1 & 2
+	accRaw[2] = accMergeBuffer[2]*gravity/accScale;
+	accRaw[3] = accMergeBuffer[3]*gravity/accScale;
+	//Z axis MPU 1 & 2
+	accRaw[4] = accMergeBuffer[4]*gravity/accScale;
+	accRaw[5] = accMergeBuffer[5]*gravity/accScale;
+
+	std::cout << "X from mpu 1 " << accRaw[0] << "\t X from mpu 2 " << accRaw[1] << std::endl; 
 
 }
 
