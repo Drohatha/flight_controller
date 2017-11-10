@@ -2,6 +2,8 @@
 #define MPU6050_H_
 
 
+#include <stdint.h>
+
 class MPU6050{
 
 
@@ -20,7 +22,10 @@ private:
 	int accDataBuffer[12]; 
 	int gyroDataBuffer[12]; 
 	int accMergeBuffer[6];
-	int gyroMergeBuffer[6];  
+	int16_t gyroMergeBuffer[6];  
+
+	float accRaw[6]; 
+	float gyroRaw[6];
 };
 
 #endif /* RASP_MPU6050_H */
