@@ -1,6 +1,6 @@
 
 
-#include "PCA9685"
+#include "PCA9685.h"
 #include <wiringPiI2C.h>
 #include <stdint.h>
 
@@ -41,20 +41,20 @@ void PCA9685::setDutyCycle(int channel, float percentage){
 	}
 
 	if(percentage == 100.0){
-		wiringPiI2CWriteReg8(LED0_OFF_H, 0x00);
-		wiringPiI2CWriteReg8(LED0_OFF_H, 0x00);
-		wiringPiI2CWriteReg8(LEDO_ON_H, ON);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
+		wiringPiI2CWriteReg8(fd,LEDO_ON_H, ON);
 	}else if(percentage == 0){
-		wiringPiI2CWriteReg8(LED0_ON_H, 0x00);
-		wiringPiI2CWriteReg8(LED0_ON_H, 0x00);
-		wiringPiI2CWriteReg8(LED0_OFF_H, OFF);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H, OFF);
 	}else{
 		uint16_t value = 40.95 * percentage; 
-		wiringPiI2CWriteReg8(LEDO_ON_H, 0x00);
-		wiringPiI2CWriteReg8(LED0_ON_L, 0x00);
+		wiringPiI2CWriteReg8(fd,LEDO_ON_H, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_L, 0x00);
 
-		wiringPiI2CWriteReg8(LED0_OFF_L, value); 
-		wiringPiI2CWriteReg8(LED0_OFF_H, value>>8); // Shift to get the the upper 
+		wiringPiI2CWriteReg8(fd,LED0_OFF_L, value); 
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H, value>>8); // Shift to get the the upper 
 
 	}
 }
