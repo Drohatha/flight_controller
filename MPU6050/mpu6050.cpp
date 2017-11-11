@@ -47,6 +47,24 @@
 #define GYRO_Z_H 71
 #define GYRO_Z_L 72
 
+enum acceleration {
+	acc_x_mpu_1,
+	acc_x_mpu_2,
+	acc_y_mpu_1,
+	acc_y_mpu_2,
+	acc_z_mpu_1.
+	acc_z_mpu_2
+}; 
+
+enum gyro{
+	gyro_x_mpu_1,
+	gyro_x_mpu_2,
+	gyro_y_mpu_1,
+	gyro_y_mpu_2,
+	gyro_z_mpu_1.
+	gyro_z_mpu_2
+};
+
 // Class constructor
 MPU6050::MPU6050(){
 	first_iteration = true; 
@@ -162,19 +180,19 @@ void MPU6050::calculateOffset(){
 	for (int i = 0; i < n; ++i){
 		readData(); 
 
-		acc_offset[0] += acc_raw[0];
-		acc_offset[1] += acc_raw[1];
-		acc_offset[2] += acc_raw[2];
-		acc_offset[3] += acc_raw[3];
-		acc_offset[4] += acc_raw[4] - gravity;
-		acc_offset[5] += acc_raw[5] - gravity;
+		acc_offset[acc_x_mpu_1] += acc_raw[acc_x_mpu_1];
+		acc_offset[acc_x_mpu_2] += acc_raw[acc_x_mpu_2];
+		acc_offset[acc_y_mpu_1] += acc_raw[acc_y_mpu_1];
+		acc_offset[acc_y_mpu_2] += acc_raw[acc_y_mpu_2];
+		acc_offset[acc_z_mpu_1] += acc_raw[acc_z_mpu_1] - gravity;
+		acc_offset[acc_z_mpu_2] += acc_raw[acc_y_mpu_2] - gravity;
 
-		gyro_offset[0] += gyro_raw[0];
-		gyro_offset[1] += gyro_raw[1];
-		gyro_offset[2] += gyro_raw[2];
-		gyro_offset[3] += gyro_raw[3];
-		gyro_offset[4] += gyro_raw[4];
-		gyro_offset[5] += gyro_raw[5];
+		gyro_offset[gyro_x_mpu_1] += gyro_raw[gyro_x_mpu_1];
+		gyro_offset[gyro_x_mpu_2] += gyro_raw[gyro_x_mpu_2];
+		gyro_offset[gyro_y_mpu_1] += gyro_raw[gyro_y_mpu_1];
+		gyro_offset[gyro_y_mpu_2] += gyro_raw[gyro_y_mpu_2];
+		gyro_offset[gyro_z_mpu_1] += gyro_raw[gyro_z_mpu_1];
+		gyro_offset[gyro_z_mpu_2] += gyro_raw[gyro_z_mpu_2];
 
 	}
 	for (int j = 0; j < 6; ++j){
