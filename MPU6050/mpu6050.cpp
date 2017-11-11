@@ -121,6 +121,17 @@ void MPU6050::readData(){
 	gyro_data_buffer[10] = wiringPiI2CReadReg8(fd_2,GYRO_Z_H);
 	gyro_data_buffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
 
+	for (int i = 0; i < 12; ++i)
+	{	
+		if(acc_data_buffer[i] == -1){
+			std::cout << "Error occured: " << acc_data_buffer[i] << std::endl; 
+		}
+		if(gyro_data_buffer[i] == -1){
+			std::cout << "Error occured: " << gyro_data_buffer[i] << std::endl; 
+		}
+		/* code */
+	}
+
 	//Acc
 	acc_merge_buffer[acc_x_mpu_1] = acc_data_buffer[0] << 8| acc_data_buffer[1]; // X  from mpu 1
 	acc_merge_buffer[acc_x_mpu_2] = acc_data_buffer[2] << 8|  acc_data_buffer[3]; // X from mpu 2
