@@ -176,7 +176,7 @@ void MPU6050::calculateOffset(){
 		gyro_offset[5] += gyro_raw[5];
 
 	}
-	for (int j = 0; i < 6; ++j){
+	for (int j = 0; j < 6; ++j){
 		acc_offset[j] = acc_offset[j]/n;
 		gyro_offset[j] = gyro_offset[j]/n; 
 	}
