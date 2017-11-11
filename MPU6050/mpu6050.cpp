@@ -1,6 +1,7 @@
 #include <wiringPiI2C.h>
 #include <iostream>
 #include <stdint.h>
+#include <unistd.h>
 
 #include "mpu6050.h"
 
@@ -190,7 +191,7 @@ void MPU6050::calculateOffset(){
 		acc_offset[acc_y_mpu_1] += acc_raw[acc_y_mpu_1];
 		acc_offset[acc_y_mpu_2] += acc_raw[acc_y_mpu_2];
 		acc_offset[acc_z_mpu_1] += acc_raw[acc_z_mpu_1] - gravity;
-		acc_offset[acc_z_mpu_2] += acc_raw[acc_y_mpu_2] - gravity;
+		acc_offset[acc_z_mpu_2] += acc_raw[acc_z_mpu_2] - gravity;
 
 		gyro_offset[gyro_x_mpu_1] += gyro_raw[gyro_x_mpu_1];
 		gyro_offset[gyro_x_mpu_2] += gyro_raw[gyro_x_mpu_2];
