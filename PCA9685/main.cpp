@@ -13,7 +13,8 @@ int main(){
 		std::cout << "Write in a value between 0 and 100! " << std::endl; 
 		std::cin>>percentage; 
 
-		pca.setDutyCycle(0,percentage);
+		pca.setServo(0,percentage);
+		pca.setServo(1,percentage); 
 
 	}	
 	return 0;

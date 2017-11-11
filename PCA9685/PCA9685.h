@@ -7,7 +7,7 @@ class PCA9685{
 public: 
 	void init(); 
 	void setDutyCycle(int channel, float percentage); 
-
+	void setServo(int channel, float percentage); 
 private: 
 
 	int fd;

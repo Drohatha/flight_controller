@@ -3,7 +3,7 @@
 #include "PCA9685.h"
 #include <wiringPiI2C.h>
 #include <stdint.h>
-
+#include <iostream>
 
 //PCA registers
 #define PCA_ADDRESS 0x40
@@ -63,6 +63,26 @@ void PCA9685::setDutyCycle(int channel, float percentage){
 
 		wiringPiI2CWriteReg8(fd,LED0_OFF_L+4*channel, value); 
 		wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, value>>8); // Shift to get the the upper 
-
 	}
+}
+
+void PCA9685::setServo(int channel, float percentage){
+	//Since the freq is = 50 Hz and the values goes from 0 to 4095 and the servo work between has a dutycycle between 1ms to 2ms 
+	//with a period of 20 ms the values should be from 205 to 410 yielding 105 steps
+	
+	uint16_t value = 0; 
+	if(percentage == 0){
+		value = 205;
+	}else if(percentage == 100){
+		value = 410; 
+	}else{
+		value = 205 + 2.05*percentage; 
+	}
+	std::cout << "Value is: \t" << value << std::endl; 
+	wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, 0x00);
+	wiringPiI2CWriteReg8(fd,LED0_ON_L+4*channel, 0x00);
+
+	wiringPiI2CWriteReg8(fd,LED0_OFF_L+4*channel, value); 
+	wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, value>>8);
+
 }
