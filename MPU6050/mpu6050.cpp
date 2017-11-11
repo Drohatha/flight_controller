@@ -177,13 +177,15 @@ void MPU6050::readData(){
 			acc_raw[i] -= acc_offset[i];
 			gyro_raw[i] -= gyro_offset[i];
 		}
-		std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl; 
+		//std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl;
+		std::cout << "Z gyro mpu 1 " << gyro_raw[gyro_z_mpu_1] << "\t Z gyro mpu 2" << gyro_raw[gyro_z_mpu_2] << std::endl;  
 	}
 }
 
 void MPU6050::calculateOffset(){
 	int n = 1000; 
 	for (int i = 0; i < n; ++i){
+
 		readData(); 
 
 		acc_offset[acc_x_mpu_1] += acc_raw[acc_x_mpu_1];
@@ -205,10 +207,6 @@ void MPU6050::calculateOffset(){
 		acc_offset[j] = acc_offset[j]/n;
 		gyro_offset[j] = gyro_offset[j]/n; 
 	}
-
-	std::cout << "Offset z_1 " << acc_offset[acc_z_mpu_1] << "\t Offset z_2 " << acc_offset[acc_z_mpu_2] << std::endl; 
-
-	sleep(10); 
 
 	calculated_offset = true; 
 }
