@@ -120,15 +120,15 @@ void MPU6050::readData(){
 	gyro_data_buffer[9] = wiringPiI2CReadReg8(fd_1,GYRO_Z_L);
 	gyro_data_buffer[10] = wiringPiI2CReadReg8(fd_2,GYRO_Z_H);
 	gyro_data_buffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
-
+	/*
 	for (int i = 0; i < 12; ++i)
 	{	
 			std::cout << "Error occured: " << acc_data_buffer[i] << std::endl; 
 
 			std::cout << "Error occured: " << gyro_data_buffer[i] << std::endl; 
 
-		/* code */
-	}
+		
+	}*/
 
 	//Acc
 	acc_merge_buffer[acc_x_mpu_1] = acc_data_buffer[0] << 8| acc_data_buffer[1]; // X  from mpu 1
@@ -175,8 +175,8 @@ void MPU6050::readData(){
 		for (int i = 0; i < 6; ++i){
 			acc_raw[i] -= acc_offset[i];
 			gyro_raw[i] -= gyro_offset[i];
-			std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl; 
 		}
+		std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl; 
 	}
 }
 
