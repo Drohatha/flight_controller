@@ -122,57 +122,53 @@ void MPU6050::readData(){
 	gyro_data_buffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
 
 	//Acc
-	acc_merge_buffer[0] = acc_data_buffer[0] << 8| acc_data_buffer[1]; // X  from mpu 1
-	acc_merge_buffer[1] = acc_data_buffer[2] << 8|  acc_data_buffer[3]; // X from mpu 2
+	acc_merge_buffer[acc_x_mpu_1] = acc_data_buffer[0] << 8| acc_data_buffer[1]; // X  from mpu 1
+	acc_merge_buffer[acc_x_mpu_2] = acc_data_buffer[2] << 8|  acc_data_buffer[3]; // X from mpu 2
 
-	acc_merge_buffer[2] = acc_data_buffer[4] << 8| acc_data_buffer[5]; // Y from mpu 1
-	acc_merge_buffer[3] = acc_data_buffer[6] << 8| acc_data_buffer[7]; // Y from mpu 2
+	acc_merge_buffer[acc_y_mpu_1] = acc_data_buffer[4] << 8| acc_data_buffer[5]; // Y from mpu 1
+	acc_merge_buffer[acc_y_mpu_2] = acc_data_buffer[6] << 8| acc_data_buffer[7]; // Y from mpu 2
 
-	acc_merge_buffer[4] = acc_data_buffer[8] << 8| acc_data_buffer[9]; // Z from mpu 1
-	acc_merge_buffer[5] = acc_data_buffer[10] << 8| acc_data_buffer[11]; // Z from mpu 2
+	acc_merge_buffer[acc_z_mpu_1] = acc_data_buffer[8] << 8| acc_data_buffer[9]; // Z from mpu 1
+	acc_merge_buffer[acc_z_mpu_2] = acc_data_buffer[10] << 8| acc_data_buffer[11]; // Z from mpu 2
 	//Gyro
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // X from mpu 1
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // X from mpu 2
+	gyro_merge_buffer[gyro_x_mpu_1] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // X from mpu 1
+	gyro_merge_buffer[gyro_x_mpu_2] = gyro_data_buffer[2] << 8| gyro_data_buffer[3]; // X from mpu 2
 
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Y from mpu 1
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Y from mpu 2
+	gyro_merge_buffer[gyro_y_mpu_1] = gyro_data_buffer[4] << 8| gyro_data_buffer[5]; // Y from mpu 1
+	gyro_merge_buffer[gyro_y_mpu_2] = gyro_data_buffer[6] << 8| gyro_data_buffer[7]; // Y from mpu 2
 
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Z from mpu 1
-	gyro_merge_buffer[0] = gyro_data_buffer[0] << 8| gyro_data_buffer[1]; // Z from mpu 2
+	gyro_merge_buffer[gyro_z_mpu_1] = gyro_data_buffer[8] << 8| gyro_data_buffer[9]; // Z from mpu 1
+	gyro_merge_buffer[gyro_z_mpu_2] = gyro_data_buffer[10] << 8| gyro_data_buffer[11]; // Z from mpu 2
 
 
 	//Convert to m/s^2
 	//X axis 
-	acc_raw[0] = acc_merge_buffer[0]*gravity/accScale;
-	acc_raw[1] = acc_merge_buffer[1]*gravity/accScale;
+	acc_raw[acc_x_mpu_1] = acc_merge_buffer[acc_y_mpu_1]*gravity/accScale;
+	acc_raw[acc_x_mpu_2] = acc_merge_buffer[acc_x_mpu_2]*gravity/accScale;
 	//Y axis MPU 1 & 2
-	acc_raw[2] = acc_merge_buffer[2]*gravity/accScale;
-	acc_raw[3] = acc_merge_buffer[3]*gravity/accScale;
+	acc_raw[acc_y_mpu_1] = acc_merge_buffer[acc_y_mpu_1]*gravity/accScale;
+	acc_raw[acc_y_mpu_2] = acc_merge_buffer[acc_y_mpu_2]*gravity/accScale;
 	//Z axis MPU 1 & 2
-	acc_raw[4] = acc_merge_buffer[4]*gravity/accScale;
-	acc_raw[5] = acc_merge_buffer[5]*gravity/accScale;
+	acc_raw[acc_z_mpu_1] = acc_merge_buffer[acc_z_mpu_1]*gravity/accScale;
+	acc_raw[acc_z_mpu_2] = acc_merge_buffer[acc_z_mpu_2]*gravity/accScale;
 
 	//Convert to degrees/s
-	gyro_raw[0] = gyro_merge_buffer[0]*250/angularScale; 
-	gyro_raw[1] = gyro_merge_buffer[1]*250/angularScale; 
+	gyro_raw[gyro_x_mpu_1] = gyro_merge_buffer[gyro_x_mpu_1]*250/angularScale; 
+	gyro_raw[gyro_x_mpu_2] = gyro_merge_buffer[gyro_x_mpu_2]*250/angularScale; 
 
-	gyro_raw[2] = gyro_merge_buffer[2]*250/angularScale; 
-	gyro_raw[3] = gyro_merge_buffer[3]*250/angularScale; 
+	gyro_raw[gyro_y_mpu_1] = gyro_merge_buffer[gyro_y_mpu_1]*250/angularScale; 
+	gyro_raw[gyro_y_mpu_2] = gyro_merge_buffer[gyro_y_mpu_2]*250/angularScale; 
 
-	gyro_raw[4] = gyro_merge_buffer[4]*250/angularScale; 
-	gyro_raw[5] = gyro_merge_buffer[5]*250/angularScale; 
+	gyro_raw[gyro_z_mpu_1] = gyro_merge_buffer[gyro_z_mpu_1]*250/angularScale; 
+	gyro_raw[gyro_z_mpu_2] = gyro_merge_buffer[gyro_z_mpu_2]*250/angularScale; 
 
 	if(calculated_offset){
 		for (int i = 0; i < 6; ++i){
 			acc_raw[i] -= acc_offset[i];
 			gyro_raw[i] -= gyro_offset[i];
-			std::cout << "X from mpu 1 " << acc_raw[0] << "\t X from mpu 2 " << acc_raw[1] << std::endl; 
+			std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl; 
 		}
-
-
 	}
-
-	
 }
 
 void MPU6050::calculateOffset(){
