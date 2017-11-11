@@ -40,24 +40,29 @@ void PCA9685::init(){
 
 void PCA9685::setDutyCycle(int channel, float percentage){
 	if(percentage > 100.0 || percentage < 0.0){
+		// Invalid percentage
+		return; 
+	}
+	if(channel < 0 || channel > 15){
+		//Nonexisting channel
 		return; 
 	}
 
 	if(percentage == 100.0){
-		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LED0_ON_H, LED_FULL_ON);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, LED_FULL_ON);
 	}else if(percentage == 0){
-		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LED0_OFF_H, LED_FULL_OFF);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, LED_FULL_OFF);
 	}else{
 		uint16_t value = 40.95 * percentage; 
-		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LED0_ON_L, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, 0x00);
+		wiringPiI2CWriteReg8(fd,LED0_ON_L+4*channel, 0x00);
 
-		wiringPiI2CWriteReg8(fd,LED0_OFF_L, value); 
-		wiringPiI2CWriteReg8(fd,LED0_OFF_H, value>>8); // Shift to get the the upper 
+		wiringPiI2CWriteReg8(fd,LED0_OFF_L+4*channel, value); 
+		wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, value>>8); // Shift to get the the upper 
 
 	}
 }
