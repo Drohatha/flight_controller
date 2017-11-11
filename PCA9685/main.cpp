@@ -4,15 +4,16 @@
 int main(){
 
  	PCA9685 pca; 
-	pca.init();  
+	pca.init();
+	int percentage = 0.0;   
 	while(1){
-		for (int i = 50; i < 100; ++i)
-		{
-			pca.setDutyCycle(0, 50); 
-		}
-		
 
-	}
 		
+		std::cout << "Write in a value between 0 and 100! "
+		std::cin >> percentage; 
+
+		pca.setDutyCycle(0,percentage);
+
+	}	
 	return 0;
 }

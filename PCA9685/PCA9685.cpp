@@ -43,7 +43,7 @@ void PCA9685::setDutyCycle(int channel, float percentage){
 	if(percentage == 100.0){
 		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
 		wiringPiI2CWriteReg8(fd,LED0_OFF_H, 0x00);
-		wiringPiI2CWriteReg8(fd,LEDO_ON_H, ON);
+		wiringPiI2CWriteReg8(fd,LED0_ON_H, ON);
 	}else if(percentage == 0){
 		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
 		wiringPiI2CWriteReg8(fd,LED0_ON_H, 0x00);
