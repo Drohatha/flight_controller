@@ -148,12 +148,13 @@ void MPU6050::readData(){
 		for (int i = 0; i < 6; ++i){
 			acc_raw[i] -= acc_offset[i];
 			gyro_raw[i] -= gyro_offset[i];
+			std::cout << "X from mpu 1 " << acc_raw[0] << "\t X from mpu 2 " << acc_raw[1] << std::endl; 
 		}
 
 
 	}
 
-	std::cout << "X from mpu 1 " << acc_raw[0] << "\t X from mpu 2 " << acc_raw[1] << std::endl; 
+	
 }
 
 void MPU6050::calculateOffset(){
