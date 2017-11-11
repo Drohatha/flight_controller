@@ -123,12 +123,10 @@ void MPU6050::readData(){
 
 	for (int i = 0; i < 12; ++i)
 	{	
-		if(acc_data_buffer[i] == -1){
 			std::cout << "Error occured: " << acc_data_buffer[i] << std::endl; 
-		}
-		if(gyro_data_buffer[i] == -1){
+
 			std::cout << "Error occured: " << gyro_data_buffer[i] << std::endl; 
-		}
+
 		/* code */
 	}
 
