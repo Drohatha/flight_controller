@@ -52,7 +52,7 @@ enum acceleration {
 	acc_x_mpu_2,
 	acc_y_mpu_1,
 	acc_y_mpu_2,
-	acc_z_mpu_1.
+	acc_z_mpu_1,
 	acc_z_mpu_2
 }; 
 
@@ -61,7 +61,7 @@ enum gyro{
 	gyro_x_mpu_2,
 	gyro_y_mpu_1,
 	gyro_y_mpu_2,
-	gyro_z_mpu_1.
+	gyro_z_mpu_1,
 	gyro_z_mpu_2
 };
 
