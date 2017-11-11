@@ -178,7 +178,7 @@ void MPU6050::readData(){
 			gyro_raw[i] -= gyro_offset[i];
 		}
 		//std::cout << "Z from mpu 1 " << acc_raw[acc_z_mpu_1] << "\t Z from mpu 2 " << acc_raw[acc_z_mpu_2] << std::endl;
-		std::cout << "Z gyro mpu 1 " << gyro_raw[gyro_z_mpu_1] << "\t Z gyro mpu 2" << gyro_raw[gyro_z_mpu_2] << std::endl;  
+		std::cout << "Z gyro mpu 1 " << gyro_raw[gyro_z_mpu_1] << "\t Z gyro mpu 2 " << gyro_raw[gyro_z_mpu_2] << std::endl;  
 	}
 }
 
