@@ -38,7 +38,7 @@ int main(){
 	mpu.init();  
 	while(1){
 
-		mpu.read_data();
+		mpu.readData();
 
 	}
 		
