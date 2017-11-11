@@ -12,6 +12,7 @@ public:
 	MPU6050(); 
 	void init(); 
 	void readData(); 
+	void calculateOffset(); 
 	void calculateEulerAngles(); 
 
 private:
