@@ -10,15 +10,8 @@ public:
 
 private: 
 
-	int fd; 
-
-
-
-
-
-
-
-}
+	int fd;
+};
 
 
 

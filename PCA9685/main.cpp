@@ -8,7 +8,7 @@ int main(){
 	while(1){
 		for (int i = 50; i < 100; ++i)
 		{
-			pca.setDutyCycle(0, 50)	
+			pca.setDutyCycle(0, 50); 
 		}
 		
 
