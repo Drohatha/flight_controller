@@ -205,6 +205,10 @@ void MPU6050::calculateOffset(){
 		gyro_offset[j] = gyro_offset[j]/n; 
 	}
 
+	std::cout << "Offset z_1 " << acc_offset[acc_z_mpu_1] << "\t Offset z_2 " << acc_offset[acc_z_mpu_2] << std::endl; 
+
+	sleep(10); 
+
 	calculated_offset = true; 
 }
 
