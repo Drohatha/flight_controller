@@ -86,3 +86,14 @@ void PCA9685::setServo(int channel, float percentage){
 	wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, value>>8);
 
 }
+
+void PCA9685::setCustom(int channel, int number){
+	uint16_t value = number; 
+	std::cout << "Value is: \t" << value << std::endl; 
+	wiringPiI2CWriteReg8(fd,LED0_ON_H+4*channel, 0x00);
+	wiringPiI2CWriteReg8(fd,LED0_ON_L+4*channel, 0x00);
+
+	wiringPiI2CWriteReg8(fd,LED0_OFF_L+4*channel, value); 
+	wiringPiI2CWriteReg8(fd,LED0_OFF_H+4*channel, value>>8);
+
+}

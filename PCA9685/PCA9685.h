@@ -8,6 +8,7 @@ public:
 	void init(); 
 	void setDutyCycle(int channel, float percentage); 
 	void setServo(int channel, float percentage); 
+	void setCustom(int channel, int number); 
 private: 
 
 	int fd;
