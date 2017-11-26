@@ -153,7 +153,7 @@ void MPU6050::readData(){
 
 	//Convert to m/s^2
 	//X axis 
-	acc_raw[acc_x_mpu_1] = acc_merge_buffer[acc_y_mpu_1]*gravity/accScale;
+	acc_raw[acc_x_mpu_1] = acc_merge_buffer[acc_x_mpu_1]*gravity/accScale;
 	acc_raw[acc_x_mpu_2] = acc_merge_buffer[acc_x_mpu_2]*gravity/accScale;
 	//Y axis MPU 1 & 2
 	acc_raw[acc_y_mpu_1] = acc_merge_buffer[acc_y_mpu_1]*gravity/accScale;
