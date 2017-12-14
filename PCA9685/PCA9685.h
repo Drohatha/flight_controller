@@ -15,10 +15,4 @@ private:
 };
 
 
-
-
-
-
-
-
 #endif /* RASP_MPU6050_H */
