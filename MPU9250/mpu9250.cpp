@@ -82,7 +82,9 @@ MPU9250::MPU9250(){
 void MPU9250::init(){
 
 	fd_1 = wiringPiI2CSetup(mpuAddress_1);
-	fd_2 = wiringPiI2CSetup(mpuAddress_2); 
+	fd_2 = wiringPiI2CSetup(mpuAddress_2);
+	fd_3 = wiringPiI2CSetup(magAddress);
+	std::cout << "What is fd_3: " << fd_3 << std::endl;  
 	//Enable first MPU9250
 	wiringPiI2CWriteReg8(fd_1,powerConfig,powerCommand); // set power in
 	wiringPiI2CWriteReg8(fd_1,accelConfig,accelCommand); // set acc scale
@@ -95,10 +97,14 @@ void MPU9250::init(){
 	wiringPiI2CWriteReg8(fd_2, bypassConfig,bypassCommand); // Set bypass mode
 
 
+
 	calculateOffset(); 
 }
 
 void MPU9250::readData(){
+
+	//Vurder om man skal skrive det her til en for-løkke istedenfor
+
 	// Acc data x axis
 	acc_data_buffer[0] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H);
 	acc_data_buffer[1] = wiringPiI2CReadReg8(fd_1, ACCEL_X_L);
