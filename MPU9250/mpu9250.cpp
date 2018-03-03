@@ -62,6 +62,7 @@
 #define MAG_Z_L 0x07
 #define MAG_Z_H 0x08
 
+#define MAG_STATUS 0x09
 
 enum acceleration {
 	acc_x_mpu_1,
@@ -163,7 +164,7 @@ void MPU9250::readData(){
 
 	mag_data_buffer[4] = wiringPiI2CReadReg8(fd_3,MAG_Z_H);
 	mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
-	
+	wiringPiI2CReadReg8(fd_3, MAG_STATUS); 
 
 	for (int i = 0; i < 6; ++i){
 		std::cout<< mag_data_buffer[i] << std::endl; 
