@@ -163,7 +163,7 @@ void MPU9250::readData(){
 	mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
 	
 
-	for (int i = 0; i < count; ++i){
+	for (int i = 0; i < 6; ++i){
 		std::cout<< mag_data_buffer[i] << std::endl; 
 		/* code */
 	}
