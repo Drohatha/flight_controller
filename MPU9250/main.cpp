@@ -1,6 +1,4 @@
-
-
-#include "mpu6050.h"
+#include "mpu9250.h"
 
 
 int main(){
