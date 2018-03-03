@@ -5,7 +5,7 @@ int main(){
 
  	MPU9250 imu;   
 	while(true){
-		mpu.readData();
+		imu.readData();
 	}
 	return 0;
 }
