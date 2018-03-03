@@ -26,7 +26,8 @@
 #define bypassConfig 0x37
 #define bypassCommand 0b00000010 // Enable bypass mode
 
-
+#define magModeConfig 0x0A
+#define magCommand 0b00000110 //Continuous measurement mode 2, poor documentation of what this actually is 
 
 // MPU9250 addresses
 #define mpuAddress_1 0x68 
@@ -111,8 +112,9 @@ void MPU9250::init(){
 	wiringPiI2CWriteReg8(fd_2,powerConfig,powerCommand); // set power in
 	wiringPiI2CWriteReg8(fd_2,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd_2, gyroConfig,gyroCommand); // set gyro scale
+	
 	wiringPiI2CWriteReg8(fd_2, bypassConfig,bypassCommand); // Set bypass mode
-
+	wiringPiI2CWriteReg8(fd_3,magModeConfig,magCommand); 
 
 
 	calculateOffset(); 
