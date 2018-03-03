@@ -163,7 +163,11 @@ void MPU9250::readData(){
 	mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
 	
 
-
+	for (int i = 0; i < count; ++i){
+		std::cout<< mag_data_buffer[i] << std::endl; 
+		/* code */
+	}
+	std::cout << "One read" << std::endl; 
 	/*
 	for (int i = 0; i < 12; ++i)
 	{	
@@ -198,11 +202,11 @@ void MPU9250::readData(){
 	mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
 	mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
 
-
+	/*
 	std::cout << "Mag x read: " <<mag_merge_buffer[mag_x_mpu_1] 
 	<< "Mag y read: " << mag_merge_buffer[mag_y_mpu_1] << "Mag z read: " << mag_merge_buffer[mag_z_mpu_1]
 	<< std::endl;
-
+*/
 	//Convert to m/s^2
 	//X axis 
 	acc_raw[acc_x_mpu_1] = acc_merge_buffer[acc_x_mpu_1]*gravity/accScale;
