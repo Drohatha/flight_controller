@@ -76,6 +76,7 @@ MPU9250::MPU9250(){
 	first_iteration = true; 
 	calculated_offset = false; 
 	init();
+	std::cout << "Init complete" << std::endl; 
 }
 
 void MPU9250::init(){
