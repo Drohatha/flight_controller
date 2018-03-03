@@ -22,6 +22,7 @@ private:
 
 	int fd_1; 
 	int fd_2; 
+	int fd_3; 
 
 	int acc_data_buffer[12]; 
 	int gyro_data_buffer[12];
