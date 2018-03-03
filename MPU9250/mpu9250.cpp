@@ -53,6 +53,15 @@
 #define GYRO_Z_H 71
 #define GYRO_Z_L 72
 
+//Magnetometer
+#define MAG_X_L 0x03
+#define MAG_X_H 0x04
+#define MAG_Y_L 0x05
+#define MAG_Y_H 0x06
+#define MAG_Z_L 0x07
+#define MAG_Z_H 0x08
+
+
 enum acceleration {
 	acc_x_mpu_1,
 	acc_x_mpu_2,
@@ -71,6 +80,15 @@ enum gyro{
 	gyro_z_mpu_2
 };
 
+enum mag{
+	mag_x_mpu_1,
+	mag_x_mpu_2,
+	mag_y_mpu_1,
+	mag_y_mpu_2,
+	mag_z_mpu_1,
+	mag_z_mpu_2
+}
+
 // Class constructor
 MPU9250::MPU9250(){
 	first_iteration = true; 
@@ -84,7 +102,6 @@ void MPU9250::init(){
 	fd_1 = wiringPiI2CSetup(mpuAddress_1);
 	fd_2 = wiringPiI2CSetup(mpuAddress_2);
 	fd_3 = wiringPiI2CSetup(magAddress);
-	std::cout << "What is fd_3: " << fd_3 << std::endl;  
 	//Enable first MPU9250
 	wiringPiI2CWriteReg8(fd_1,powerConfig,powerCommand); // set power in
 	wiringPiI2CWriteReg8(fd_1,accelConfig,accelCommand); // set acc scale
@@ -135,6 +152,18 @@ void MPU9250::readData(){
 	gyro_data_buffer[9] = wiringPiI2CReadReg8(fd_1,GYRO_Z_L);
 	gyro_data_buffer[10] = wiringPiI2CReadReg8(fd_2,GYRO_Z_H);
 	gyro_data_buffer[11] = wiringPiI2CReadReg8(fd_2,GYRO_Z_L);
+
+	mag_data_buffer[0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
+	mag_data_buffer[1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
+
+	mag_data_buffer[2] = wiringPiI2CReadReg8(fd_3,MAG_Y_H);
+	mag_data_buffer[3] = wiringPiI2CReadReg8(fd_3,MAG_Y_L);
+
+	mag_data_buffer[4] = wiringPiI2CReadReg8(fd_3,MAG_Z_H);
+	mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
+	
+
+
 	/*
 	for (int i = 0; i < 12; ++i)
 	{	
@@ -164,6 +193,15 @@ void MPU9250::readData(){
 	gyro_merge_buffer[gyro_z_mpu_1] = gyro_data_buffer[8] << 8| gyro_data_buffer[9]; // Z from mpu 1
 	gyro_merge_buffer[gyro_z_mpu_2] = gyro_data_buffer[10] << 8| gyro_data_buffer[11]; // Z from mpu 2
 
+	//Mag 
+	mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[0] << 8| mag_data_buffer[1];
+	mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
+	mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
+
+
+	std::cout << "Mag x read: " <<mag_merge_buffer[mag_x_mpu_1] 
+	<< "Mag y read: " << mag_merge_buffer[mag_y_mpu_1] << "Mag z read: " << mag_merge_buffer[mag_z_mpu_1]
+	<< std::endl;
 
 	//Convert to m/s^2
 	//X axis 
@@ -177,7 +215,7 @@ void MPU9250::readData(){
 	acc_raw[acc_z_mpu_2] = acc_merge_buffer[acc_z_mpu_2]*gravity/accScale;
 
 	//Convert to degrees/s
-	gyro_raw[gyro_x_mpu_1] = gyro_merge_buffer[gyro_x_mpu_1]*250/angularScale; 
+	gyro_raw[gyro_x_mpu_1] = gyro_merge_buffer[gyro_x_mpu_1]*250/angularScale; // 250 deg/s is max measurement output
 	gyro_raw[gyro_x_mpu_2] = gyro_merge_buffer[gyro_x_mpu_2]*250/angularScale; 
 
 	gyro_raw[gyro_y_mpu_1] = gyro_merge_buffer[gyro_y_mpu_1]*250/angularScale; 
@@ -185,6 +223,10 @@ void MPU9250::readData(){
 
 	gyro_raw[gyro_z_mpu_1] = gyro_merge_buffer[gyro_z_mpu_1]*250/angularScale; 
 	gyro_raw[gyro_z_mpu_2] = gyro_merge_buffer[gyro_z_mpu_2]*250/angularScale; 
+
+	//mag_raw[mag_x_mpu_1] = mag_merge_buffer[mag_x_mpu_1]*
+	//mag_raw[mag_y_mpu_1] = mag_merge_buffer[mag_y_mpu_1]*
+	//mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*
 
 	if(calculated_offset){
 		for (int i = 0; i < 6; ++i){
