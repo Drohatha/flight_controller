@@ -23,6 +23,9 @@
 //#define gyroCommand 0x08 // +- 500
 #define angularScale 32768 // Number the MPU9250 yield when 250 deg/s is measured
 
+#define bypassConfig 0x37
+#define bypassCommand 0b00000010 // Enable bypass mode
+
 
 
 // MPU9250 addresses
@@ -83,10 +86,12 @@ void MPU9250::init(){
 	wiringPiI2CWriteReg8(fd_1,powerConfig,powerCommand); // set power in
 	wiringPiI2CWriteReg8(fd_1,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd_1,gyroConfig,gyroCommand); // set gyro scale
+	wiringPiI2CWriteReg8(fd_1, bypassConfig,bypassCommand); // Set bypass mode
 	//Enable second MPU9250
 	wiringPiI2CWriteReg8(fd_2,powerConfig,powerCommand); // set power in
 	wiringPiI2CWriteReg8(fd_2,accelConfig,accelCommand); // set acc scale
 	wiringPiI2CWriteReg8(fd_2, gyroConfig,gyroCommand); // set gyro scale
+	wiringPiI2CWriteReg8(fd_2, bypassConfig,bypassCommand); // Set bypass mode
 
 
 	calculateOffset(); 
