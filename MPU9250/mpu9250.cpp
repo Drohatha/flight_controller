@@ -204,10 +204,6 @@ void MPU9250::readData(){
 	mag_merge_buffer[mag_y_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
 	mag_merge_buffer[mag_z_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
 
-	
-	std::cout << "Mag x read: " <<mag_merge_buffer[mag_x_mpu_1] 
-	<< "Mag y read: " << mag_merge_buffer[mag_y_mpu_1] << "Mag z read: " << mag_merge_buffer[mag_z_mpu_1]
-	<< std::endl;
 
 	//Convert to m/s^2
 	//X axis 
