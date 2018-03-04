@@ -33,6 +33,7 @@ private:
 
 	float acc_raw[6]; 
 	float gyro_raw[6];
+	float mag_raw[6]; 
 
 	float acc_offset[6];
 	float gyro_offset[6]; 
