@@ -232,7 +232,7 @@ void MPU9250::readData(){
 
 	mag_raw[mag_x_mpu_1] = mag_merge_buffer[mag_x_mpu_1]*0.15; //0.15 micro Tesla pr LSB 
 	mag_raw[mag_y_mpu_1] = mag_merge_buffer[mag_y_mpu_1]*0.15;
-	mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*0.15: 
+	mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*0.15; 
 
 	std::cout << " Mag_x: " << mag_raw[mag_x_mpu_1] << " Mag_y: " << mag_raw[mag_y_mpu_1]
 	<< " Mag_z " << mag_raw[mag_x_mpu_1]; 
