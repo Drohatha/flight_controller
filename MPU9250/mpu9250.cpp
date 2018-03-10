@@ -27,7 +27,7 @@
 #define bypassCommand 0b00000010 // Enable bypass mode
 
 #define magModeConfig 0x0A
-#define magCommand 0b00000110 //Continuous measurement mode 2 and 16 bit measurement, poor documentation of what this actually is //0b00010110
+#define magCommand 0b00010110 //Continuous measurement mode 2 and 16 bit measurement, poor documentation of what this actually is //0b00010110
 
 // MPU9250 addresses
 #define mpuAddress_1 0x68 
