@@ -113,6 +113,7 @@ void MPU9250::readData(){
 
 	for (int j = 0; j < 6 ; j++){
 		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
+		std::cout << " Raw data output: " << " " << mag_data_buffer[j] << std::endl; 
 	}
 	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
@@ -124,12 +125,12 @@ void MPU9250::readData(){
 		
 		gyro_raw[m] = gyro_merge_buffer[m]*250/angularScale; // 250 deg/s is max measurement output
 		mag_merge_buffer[m] = mag_data_buffer[m+1] << 8| mag_data_buffer[m]; // higher merged with lower
-		std::cout << " Merge buffer mag: " << m << " " <<mag_merge_buffer[m] << std::endl; 
+		//std::cout << " Merge buffer mag: " << m << " " <<mag_merge_buffer[m] << std::endl; 
 		mag_raw[m] = mag_merge_buffer[m]*0.15; 
 	}
 
-	std::cout << " Mag_x: " << mag_raw[0] << " Mag_y: " << mag_raw[1]
-	<< " Mag_z " << mag_raw[2] << std::endl; 
+	//std::cout << " Mag_x: " << mag_raw[0] << " Mag_y: " << mag_raw[1]
+	//<< " Mag_z " << mag_raw[2] << std::endl; 
 	if(calculated_offset){
 		for (int i = 0; i < 6; ++i){
 			acc_raw[i] -= acc_offset[i];
