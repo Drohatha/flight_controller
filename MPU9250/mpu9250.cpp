@@ -127,8 +127,8 @@ void MPU9250::readData(){
 		mag_raw[m] = mag_merge_buffer[m]*0.15; 
 	}
 
-	std::cout << " Mag_x: " << mag_raw[] << " Mag_y: " << mag_raw[]
-	<< " Mag_z " << mag_raw[] << std::endl; 
+	std::cout << " Mag_x: " << mag_raw[0] << " Mag_y: " << mag_raw[1]
+	<< " Mag_z " << mag_raw[2] << std::endl; 
 	if(calculated_offset){
 		for (int i = 0; i < 6; ++i){
 			acc_raw[i] -= acc_offset[i];
