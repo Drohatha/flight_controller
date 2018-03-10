@@ -147,6 +147,9 @@ void MPU9250::readData(){
     mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
     wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
+    std::cout << "Mag data buffer: 0 x_H: " << mag_data_buffer[0] << std::endl; 
+    std::cout << "Mag data buffer: 1 x_L"  << mag_data_buffer[1] << std::endl; 
+
     for (int j = 0; j < 6 ; j++){
 	//	mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
 		//std::cout << " Raw data output working run: " << j << " " << mag_data_buffer[j] << std::endl; 
