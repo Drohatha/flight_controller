@@ -27,7 +27,7 @@
 #define bypassCommand 0b00000010 // Enable bypass mode
 
 #define magModeConfig 0x0A
-#define magCommand 0b00000110 //Continuous measurement mode 2 and 16 bit measurement, poor documentation of what this actually is //0b00010110
+#define magCommand 0b00010110 //Continuous measurement mode 2 and 16 bit measurement, poor documentation of what this actually is //0b00010110
 
 // MPU9250 addresses
 #define mpuAddress_1 0x68 
@@ -148,7 +148,11 @@ void MPU9250::readData(){
     wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
     std::cout << "Mag data buffer: 0 x_H: " << mag_data_buffer[0] << std::endl; 
-    std::cout << "Mag data buffer: 1 x_L"  << mag_data_buffer[1] << std::endl; 
+    std::cout << "Mag data buffer: 1 x_L: "  << mag_data_buffer[1] << std::endl; 
+    std::cout << "Mag data buffer: 0 y_H: " << mag_data_buffer[2] << std::endl; 
+    std::cout << "Mag data buffer: 1 y_L: "  << mag_data_buffer[3] << std::endl; 
+    std::cout << "Mag data buffer: 0 z_H: " << mag_data_buffer[4] << std::endl; 
+    std::cout << "Mag data buffer: 1 z_L: "  << mag_data_buffer[5] << std::endl; 
 
     for (int j = 0; j < 6 ; j++){
 	//	mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
