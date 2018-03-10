@@ -112,7 +112,7 @@ void MPU9250::readData(){
 	}
 
 	for (int j = 0; j < 5 ; j++){
-		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j) //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
+		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
 	}
 	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
