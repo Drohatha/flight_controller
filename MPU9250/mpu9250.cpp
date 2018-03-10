@@ -166,4 +166,4 @@ void MPU9250::calculateOffset(){
 	calculated_offset = true; */
 }
 
-*/
+
