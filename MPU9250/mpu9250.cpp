@@ -115,7 +115,7 @@ void MPU9250::init(){
 	wiringPiI2CWriteReg8(fd_2, gyroConfig,gyroCommand); // set gyro scale
 	
 	wiringPiI2CWriteReg8(fd_2, bypassConfig,bypassCommand); // Set bypass mode
-	wiringPiI2CWriteReg8(fd_3,magModeConfig,magCommand); 
+	wiringPiI2CWriteReg8(fd_3, magModeConfig,magCommand); 
 
 
 	calculateOffset(); 
