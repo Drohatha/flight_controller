@@ -100,7 +100,7 @@ void MPU9250::readData(){
 
 	// Acc data x axis
 
-	for (int i = 0; i < 5; i++){
+	for (int i = 0; i < 6; i++){
 		acc_data_buffer[i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
 
 		acc_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
@@ -111,12 +111,12 @@ void MPU9250::readData(){
 
 	}
 
-	for (int j = 0; j < 5 ; j++){
+	for (int j = 0; j < 6 ; j++){
 		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
 	}
 	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
-	for (int m = 0; m < 5; m++){
+	for (int m = 0; m < 6; m++){
 		//Merge the lower and higher databits
 		acc_merge_buffer[m] = acc_data_buffer[2*m] << 8| acc_data_buffer[2*m+1]; 
 		gyro_merge_buffer[m] = gyro_data_buffer[2*m] << 8| gyro_data_buffer[2*m+1];
