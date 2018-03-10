@@ -124,10 +124,30 @@ void MPU9250::readData(){
 		acc_raw[m] = acc_merge_buffer[m]*gravity/accScale; 
 		
 		gyro_raw[m] = gyro_merge_buffer[m]*250/angularScale; // 250 deg/s is max measurement output
-		mag_merge_buffer[m] = mag_data_buffer[m+1] << 8| mag_data_buffer[m]; // higher merged with lower
+		//mag_merge_buffer[m] = mag_data_buffer[m+1] << 8| mag_data_buffer[m]; // higher merged with lower
 		//std::cout << " Merge buffer mag: " << m << " " <<mag_merge_buffer[m] << std::endl; 
-		mag_raw[m] = mag_merge_buffer[m]*0.15; 
+		//mag_raw[m] = mag_merge_buffer[m]*0.15; 
 	}
+	mag_data_buffer[0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
+    mag_data_buffer[1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
+
+    mag_data_buffer[2] = wiringPiI2CReadReg8(fd_3,MAG_Y_H);
+    mag_data_buffer[3] = wiringPiI2CReadReg8(fd_3,MAG_Y_L);
+
+    mag_data_buffer[4] = wiringPiI2CReadReg8(fd_3,MAG_Z_H);
+    mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
+    wiringPiI2CReadReg8(fd_3, MAG_STATUS);
+
+    mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[0] << 8| mag_data_buffer[1];
+	mag_merge_buffer[mag_y_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
+	mag_merge_buffer[mag_z_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
+
+	mag_raw[mag_x_mpu_1] = mag_merge_buffer[mag_x_mpu_1]*0.15; //0.15 micro Tesla pr LSB 
+    mag_raw[mag_y_mpu_1] = mag_merge_buffer[mag_y_mpu_1]*0.15;
+    mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*0.15; 
+
+    std::cout << " Mag_x: " << mag_raw[mag_x_mpu_1] << " Mag_y: " << mag_raw[mag_y_mpu_1]
+            << " Mag_z " << mag_raw[mag_x_mpu_1] << std::endl;
 
 	//std::cout << " Mag_x: " << mag_raw[0] << " Mag_y: " << mag_raw[1]
 	//<< " Mag_z " << mag_raw[2] << std::endl; 
