@@ -115,13 +115,12 @@ void MPU9250::readData(){
 		gyro_data_buffer[i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
 
 		gyro_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
-
 	}
-
+	/*
 	for (int j = 0; j < 6 ; j++){
 		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
 		//std::cout << " Raw data output: " << j << " " << mag_data_buffer[j] << std::endl; 
-	}
+	}*/
 
 	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
@@ -149,10 +148,10 @@ void MPU9250::readData(){
 
     std::cout << "Mag data buffer: 0 x_H: " << mag_data_buffer[0] << std::endl; 
     std::cout << "Mag data buffer: 1 x_L: "  << mag_data_buffer[1] << std::endl; 
-    std::cout << "Mag data buffer: 0 y_H: " << mag_data_buffer[2] << std::endl; 
-    std::cout << "Mag data buffer: 1 y_L: "  << mag_data_buffer[3] << std::endl; 
-    std::cout << "Mag data buffer: 0 z_H: " << mag_data_buffer[4] << std::endl; 
-    std::cout << "Mag data buffer: 1 z_L: "  << mag_data_buffer[5] << std::endl; 
+    //std::cout << "Mag data buffer: 0 y_H: " << mag_data_buffer[2] << std::endl; 
+    //std::cout << "Mag data buffer: 1 y_L: "  << mag_data_buffer[3] << std::endl; 
+    //std::cout << "Mag data buffer: 0 z_H: " << mag_data_buffer[4] << std::endl; 
+    //std::cout << "Mag data buffer: 1 z_L: "  << mag_data_buffer[5] << std::endl; 
 
     for (int j = 0; j < 6 ; j++){
 	//	mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
@@ -163,6 +162,8 @@ void MPU9250::readData(){
 	mag_merge_buffer[mag_y_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
 	mag_merge_buffer[mag_z_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
 
+	std::cout << "Mag x dir: " << mag_merge_buffer[mag_x_mpu_1] << std::endl;
+	
 	mag_raw[mag_x_mpu_1] = mag_merge_buffer[mag_x_mpu_1]*0.15; //0.15 micro Tesla pr LSB 
     mag_raw[mag_y_mpu_1] = mag_merge_buffer[mag_y_mpu_1]*0.15;
     mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*0.15; 
