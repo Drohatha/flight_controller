@@ -124,6 +124,7 @@ void MPU9250::readData(){
 		
 		gyro_raw[m] = gyro_merge_buffer[m]*250/angularScale; // 250 deg/s is max measurement output
 		mag_merge_buffer[m] = mag_data_buffer[m+1] << 8| mag_data_buffer[m]; // higher merged with lower
+		std::cout << " Merge buffer mag: " << m << " " <<mag_merge_buffer[m] << std::endl; 
 		mag_raw[m] = mag_merge_buffer[m]*0.15; 
 	}
 
