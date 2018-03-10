@@ -103,7 +103,7 @@ void MPU9250::readData(){
 	for (int i = 0; i < 5; i++){
 		acc_data_buffer[i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
 
-		acc_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i): //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
+		acc_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 		
 		gyro_data_buffer[i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
 
