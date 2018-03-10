@@ -62,7 +62,14 @@
 
 #define MAG_STATUS 0x09
 
-
+enum mag{
+	mag_x_mpu_1,
+	mag_x_mpu_2,
+	mag_y_mpu_1,
+	mag_y_mpu_2,
+	mag_z_mpu_1,
+	mag_z_mpu_2
+};
 
 // Class constructor
 MPU9250::MPU9250(){
