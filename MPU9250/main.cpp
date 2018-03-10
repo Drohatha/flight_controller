@@ -2,7 +2,6 @@
 
 
 int main(){
-
  	MPU9250 imu;   
 	while(true){
 		imu.readData();
