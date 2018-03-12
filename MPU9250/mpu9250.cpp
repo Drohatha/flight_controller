@@ -3,7 +3,12 @@
 #include <stdint.h>
 #include <unistd.h>
 
+#include <chrono>
+#include <ctime>
+
 #include "mpu9250.h"
+
+
 
 
 // Math constants
@@ -201,6 +206,122 @@ void MPU9250::calculateOffset(){
 	}
 
 	calculated_offset = true; */
+}
+
+void MPU9250::calibrateMagnetometer(){
+	auto start_time = std::chrono::system_clock::now(); 
+	auto now = std::chrono::system_clock::now(); 
+	std::chrono::duration<double> elapsed_time = now - start_time; 
+	
+	enum imu{
+		imu_1,
+		imu_2
+	}; 
+	enum max_readings{
+		x_1,
+		x_2,
+		y_1,
+		y_2,
+		z_1,
+		z_2
+	};
+	
+	double max[2][6]; // Two imu's and 6 values we want to find 
+	double min[2][6]; // Two imu's and 6 values we want to find
+	//Rotate around x axis
+	
+	readData(); 
+		
+	max[imu_1][y_1] = mag_raw[1]; // Improve code quality here
+	max[imu_1][z_1] = mag_raw[2]; 
+
+
+	while(elapsed_time < 10.0){
+		readData();
+		//Find y max and y min
+		if(mag_raw[1] > max[imu_1][y_1]){
+			max[imu_1][y_1] = mag_raw[1];
+		}else if(mag_raw[1] < min[imu_1][y_1]){
+			min[imu_1][y_1] = mag_raw[1];
+		}
+		//Find z max and z min
+		if(mag_raw[2] > max[imu_1][z_1]){
+			max[imu_1][z_1] = mag_raw[2]; 
+		}else if(mag_raw[2] < min[imu_1][z_1]){
+			min[imu_1][z_1] = mag_raw[2];
+		}
+		now = std::chrono::system_clock::now();
+		elapsed_time = now - start_time; 
+	}
+	std::cout << "Rotation around x axis is done! Press enter to continue with rotation around y axis" << std::endl;
+	std::cin; 
+	//Rotate around y axis, find max x and max z
+	start_time = std::chrono::system_clock::now();
+	while(elapsed_time < 10.0){
+		readData();
+		//Find x max and x min
+		if(mag_raw[0] > max[imu_1][x_1]){
+			max[imu_1][x_1] = mag_raw[0];
+		}else if(mag_raw[0] < min[imu_1][x_1]){
+			min[imu_1][x_1] = mag_raw[0];
+		}
+		//Find z max and z min
+		if(mag_raw[2] > max[imu_1][z_2]){
+			max[imu_1][z_2] = mag_raw[2]; 
+		}else if(mag_raw[2] < min[imu_1][z_2]){
+			min[imu_1][z_2] = mag_raw[2];
+		}
+		now = std::chrono::system_clock::now();
+		elapsed_time = now - start_time; 
+	}
+	std::cout << "Rotation around y axis is done! Press enter to continue with rotation around z axis" << std::endl; 
+
+	std::cin; 
+	//Rotate around z axis, find max/min x and max/min y
+	start_time = std::chrono::system_clock::now();
+	while(elapsed_time < 10.0){
+		readData();
+		//Find y max and y min
+		if(mag_raw[0] > max[imu_1][x_2]){
+			max[imu_1][x_2] = mag_raw[0];
+		}else if(mag_raw[0] < min[imu_1][x_2]){
+			min[imu_1][x_2] = mag_raw[0];
+		}
+		//Find x max and d min
+		if(mag_raw[1] > max[imu_1][y_2]){
+			max[imu_1][y_2] = mag_raw[1]; 
+		}else if(mag_raw[1] < min[imu_1][y_2]){
+			min[imu_1][y_2] = mag_raw[1];
+		}
+
+		now = std::chrono::system_clock::now();
+		elapsed_time = now - start_time; 
+	}
+	std::cout << "Rotation around z is done! Calibration is complete" << std::endl; 
+
+	// Should be defined as class variables
+	for (int i = 0; i < 2; i++){ // Two is the number of imu's
+		mag_offset[0+i] = (max[imu_1][x_1] + max[imu_1][x_2] + min[imu_1][x_1] + min[imu_1][x_2])/4;
+		mag_offset[1+i] = (max[imu_1][y_1] + max[imu_1][y_2] + min[imu_1][y_1] + min[imu_1][y_2])/4;
+		mag_offset[2+i] = (max[imu_1][z_1] + max[imu_1][z_2] + min[imu_1][z_1] + min[imu_1][z_2])/4;
+	}
+}
+
+
+
+void MPU9250::timeTest(){
+
+	// Per rotation x,y,z we get two max values and two min values pr imu
+
+	static auto start = std::chrono::system_clock::now(); 
+	std::cout << " " << std::endl; 
+
+	auto end = std::chrono::system_clock::now();
+
+
+	std::chrono::duration<double> elapsed_seconds = end - start; 
+
+	std::cout << "Time elapsed is: " << elapsed_seconds << std::endl; 
 }
 
 
