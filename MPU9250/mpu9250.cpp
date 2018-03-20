@@ -119,21 +119,14 @@ void MPU9250::init(){
 void MPU9250::readData(){
 
 
-	// Acc data x axis
-	//Acc and gyro data buffer do not need to be class-members
-	std::cout << "Before read boost" << std::endl; 
-	for (int j = 0; j < 100; j++){
-		/* code */
-	//Should probably check if the data is ready! Are register for this!
-		for (int i = 0; i < 6; i++){
-			acc_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
-			acc_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
+	for (int i = 0; i < 6; i++){
+		acc_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
+		acc_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 		
-			gyro_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
-			gyro_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
-		}
+		gyro_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
+		gyro_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 	}
-	std::cout << "After 100 reads ! " << std::endl; 
+	
 	for (int i = 0; i < 3; i++){ // 3 is num of axis
 
 		//Could have, for each imu = 0
@@ -183,7 +176,7 @@ void MPU9250::readData(){
 			gyro_raw[imu_2][i] -= gyro_offset[imu_2][i];
 
 		} 
-		std::cout << " Acc x " << acc_raw[imu_2][x] << " Acc y " << acc_raw[imu_2][y] << " Acc z: " << acc_raw[imu_2][z] << std::endl; 
+		std::cout << " Acc x " << gyro_raw[imu_2][x] << " Acc y " << gyro_raw[imu_2][y] << " Acc z: " << gyro_raw[imu_2][z] << std::endl; 
 	}
 }
 	
