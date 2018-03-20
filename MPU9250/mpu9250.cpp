@@ -148,6 +148,7 @@ void MPU9250::readData(){
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
 
+	std::cout << "Raw y data: " << acc_raw[imu_2][y] << std::endl; 
 	
 	/* Dont read mag data now! Check if the other data make sence! 
 	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
@@ -179,6 +180,7 @@ void MPU9250::readData(){
 			//gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
 			acc_raw[imu_2][i] -= acc_offset[imu_2][i];
 			gyro_raw[imu_2][i] -= gyro_offset[imu_2][i];
+
 		} 
 		std::cout << " Acc x " << acc_raw[imu_2][x] << " Acc y " << acc_raw[imu_2][y] << " Acc z: " << acc_raw[imu_2][z] << std::endl; 
 	}
@@ -196,6 +198,7 @@ void MPU9250::calculateOffset(){
 		acc_offset[imu_2][y] += acc_raw[imu_2][y];
 		acc_offset[imu_1][z] += acc_raw[imu_1][z] - gravity;
 		acc_offset[imu_2][z] += acc_raw[imu_2][z] - gravity;
+
 
 		gyro_offset[imu_1][x] += gyro_raw[imu_1][x];
 		gyro_offset[imu_2][x] += gyro_raw[imu_2][x];
