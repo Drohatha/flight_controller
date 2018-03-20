@@ -8,9 +8,6 @@
 
 #include "mpu9250.h"
 
-
-
-
 // Math constants
 #define gravity 9.81 // m/s^2 
 #define pi 3.14
@@ -67,6 +64,19 @@
 
 #define MAG_STATUS 0x09
 
+
+
+enum axis{
+	x,
+	y,
+	z
+};
+enum imu{
+	imu_1,
+	imu_2
+};
+
+
 enum mag{
 	mag_x_mpu_1,
 	mag_x_mpu_2,
@@ -100,7 +110,7 @@ void MPU9250::init(){
 	wiringPiI2CWriteReg8(fd_2, gyroConfig,gyroCommand); // set gyro scale
 	
 	wiringPiI2CWriteReg8(fd_2, bypassConfig,bypassCommand); // Set bypass mode
-	wiringPiI2CWriteReg8(fd_3, magModeConfig,magCommand); 
+	wiringPiI2CWriteReg8(fd_3, magModeConfig,magCommand); //Start mag and continous measurement mode 
 
 
 	calculateOffset(); 
@@ -111,70 +121,63 @@ void MPU9250::readData(){
 	//Vurder om man skal skrive det her til en for-løkke istedenfor
 
 	// Acc data x axis
+	//Acc and gyro data buffer do not need to be class-members
+
 
 	for (int i = 0; i < 6; i++){
-		acc_data_buffer[i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
-
-		acc_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
+		acc_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1, ACCEL_X_H + i); //Imu 1 Acc Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
+		acc_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2, ACCEL_X_H + i); //Imu 2 Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 		
-		gyro_data_buffer[i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
-
-		gyro_data_buffer[i + 6] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
+		gyro_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
+		gyro_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 	}
-	/*
-	for (int j = 0; j < 6 ; j++){
-		mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
-		//std::cout << " Raw data output: " << j << " " << mag_data_buffer[j] << std::endl; 
-	}*/
-
+	//Acc/gyro_merge buffer do not need to be class-members! 
 	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
+	//Change such that we have a 3 x num_imu matrix! 
+	
+	for (int i = 0; i < 3; i++){ // 3 is num of axis
 
-	for (int m = 0; m < 6; m++){
-		//Merge the lower and higher databits
-		acc_merge_buffer[m] = acc_data_buffer[2*m] << 8| acc_data_buffer[2*m+1]; 
-		gyro_merge_buffer[m] = gyro_data_buffer[2*m] << 8| gyro_data_buffer[2*m+1];
-		acc_raw[m] = acc_merge_buffer[m]*gravity/accScale; 
-		
-		gyro_raw[m] = gyro_merge_buffer[m]*250/angularScale; // 250 deg/s is max measurement output
-		//mag_merge_buffer[m] = mag_data_buffer[m+1] << 8| mag_data_buffer[m]; // higher merged with lower
-		//std::cout << " Merge buffer mag: " << m << " " <<mag_merge_buffer[m] << std::endl; 
-		//mag_raw[m] = mag_merge_buffer[m]*0.15; 
+		//Could have, for each imu = 0
+		acc_merge_buffer[imu_1][i] = acc_data_buffer[imu_1][2*m] << 8| acc_data_buffer[imu_1][2*m+1];
+		acc_merge_buffer[imu_2][i] = acc_data_buffer[imu_2][2*m] << 8| acc_data_buffer[imu_2][2*m+1];
+
+		gyro_merge_buffer[imu_1][i] = gyro_data_buffer[imu_1][2*m] << 8| gyro_data_buffer[imu_1][2*m+1];
+		gyro_merge_buffer[imu_2][i] = gyro_data_buffer[imu_2][2*m] << 8| gyro_data_buffer[imu_2][2*m+1];
+
+		acc_raw[imu_1][i] = acc_merge_buffer[imu_1][i]*gravity/accScale; 
+		acc_raw[imu_2][i] = acc_merge_buffer[imu_2][i]*gravity/accScale;
+
+		gyro_raw[imu_1][i] = gyro_merge_buffer[imu_1][i]*250/angularScale; // 250 degreee/s / LSB 
+		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
 
-	mag_data_buffer[0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
-    mag_data_buffer[1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
+	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
+    mag_data_buffer[imu_1][1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
 
-    mag_data_buffer[2] = wiringPiI2CReadReg8(fd_3,MAG_Y_H);
-    mag_data_buffer[3] = wiringPiI2CReadReg8(fd_3,MAG_Y_L);
+    mag_data_buffer[imu_1][2] = wiringPiI2CReadReg8(fd_3,MAG_Y_H);
+    mag_data_buffer[imu_1][3] = wiringPiI2CReadReg8(fd_3,MAG_Y_L);
 
-    mag_data_buffer[4] = wiringPiI2CReadReg8(fd_3,MAG_Z_H);
-    mag_data_buffer[5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
+    mag_data_buffer[imu_1][4] = wiringPiI2CReadReg8(fd_3,MAG_Z_H);
+    mag_data_buffer[imu_1][5] = wiringPiI2CReadReg8(fd_3,MAG_Z_L);
     wiringPiI2CReadReg8(fd_3, MAG_STATUS);
 
-    for (int j = 0; j < 6 ; j++){
-	//	mag_data_buffer[j] = wiringPiI2CReadReg8(fd_3,MAG_X_L + j); //Imu 1 mag Write x_l, x_h, y_l, y_h, z_l, z_h into 0-5
-		//std::cout << " Raw data output working run: " << j << " " << mag_data_buffer[j] << std::endl; 
-	}
-
-    mag_merge_buffer[mag_x_mpu_1] = mag_data_buffer[0] << 8| mag_data_buffer[1];
-	mag_merge_buffer[mag_y_mpu_1] = mag_data_buffer[2] << 8| mag_data_buffer[3];
-	mag_merge_buffer[mag_z_mpu_1] = mag_data_buffer[4] << 8| mag_data_buffer[5];
+    mag_merge_buffer[imu_1][x] = mag_data_buffer[0] << 8| mag_data_buffer[1];
+	mag_merge_buffer[imu_1][y] = mag_data_buffer[2] << 8| mag_data_buffer[3];
+	mag_merge_buffer[imu_1][z] = mag_data_buffer[4] << 8| mag_data_buffer[5];
 
 	std::cout << "Mag x dir: " << mag_merge_buffer[mag_x_mpu_1] << std::endl;
 
-	mag_raw[mag_x_mpu_1] = mag_merge_buffer[mag_x_mpu_1]*0.15; //0.15 micro Tesla pr LSB 
-    mag_raw[mag_y_mpu_1] = mag_merge_buffer[mag_y_mpu_1]*0.15;
-    mag_raw[mag_z_mpu_1] = mag_merge_buffer[mag_z_mpu_1]*0.15; 
+	mag_raw[imu_1][x] = mag_merge_buffer[imu_1][x]*0.15; //0.15 micro Tesla pr LSB 
+    mag_raw[imu_1][y] = mag_merge_buffer[imu_1][y]*0.15;
+    mag_raw[imu_1][z] = mag_merge_buffer[imu_1][z]*0.15; 
 
     std::cout << " Mag_x: " << mag_raw[mag_x_mpu_1] << " Mag_y: " << mag_raw[mag_y_mpu_1]
     << " Mag_z " << mag_raw[mag_z_mpu_1] << std::endl;
 
-	//std::cout << " Mag_x: " << mag_raw[0] << " Mag_y: " << mag_raw[1]
-	//<< " Mag_z " << mag_raw[2] << std::endl; 
 	if(calculated_offset){
-		for (int i = 0; i < 6; ++i){
-			acc_raw[i] -= acc_offset[i];
-			gyro_raw[i] -= gyro_offset[i];
+		for (int i = 0; i < 3; ++i){
+			acc_raw[imu_1][i] -= acc_offset[imu_1][i];
+			gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
 		} 
 	}
 }
@@ -299,15 +302,12 @@ void MPU9250::calibrateMagnetometer(){
 	}
 	std::cout << "Rotation around z is done! Calibration is complete" << std::endl; 
 
-	// Should be defined as class variables
 	for (int i = 0; i < 2; i++){ // Two is the number of imu's
 		mag_offset[0+i] = (max[imu_1][x_1] + max[imu_1][x_2] + min[imu_1][x_1] + min[imu_1][x_2])/4;
 		mag_offset[1+i] = (max[imu_1][y_1] + max[imu_1][y_2] + min[imu_1][y_1] + min[imu_1][y_2])/4;
 		mag_offset[2+i] = (max[imu_1][z_1] + max[imu_1][z_2] + min[imu_1][z_1] + min[imu_1][z_2])/4;
 	}
 }
-
-
 
 void MPU9250::timeTest(){
 
@@ -323,5 +323,3 @@ void MPU9250::timeTest(){
 
 	std::cout << "Time elapsed is: " << elapsed_seconds << std::endl; 
 }
-
-
