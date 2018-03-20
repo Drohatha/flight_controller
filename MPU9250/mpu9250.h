@@ -14,7 +14,7 @@ public:
 	void readData(); 
 	void calculateOffset(); 
 	void calculateEulerAngles();
-	void calibrateMagnetometer()
+	void calibrateMagnetometer();
 
 private:
 	bool calculated_offset;
