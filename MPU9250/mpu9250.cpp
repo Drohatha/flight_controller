@@ -122,7 +122,7 @@ void MPU9250::readData(){
 	// Acc data x axis
 	//Acc and gyro data buffer do not need to be class-members
 	std::cout << "Before read boost"
-	for (int i = 0; i < 100; i++)
+	for (int j = 0; j < 100; i++)
 	{
 		/* code */
 	//Should probably check if the data is ready! Are register for this!
@@ -134,6 +134,7 @@ void MPU9250::readData(){
 		gyro_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 	}
 	}
+	std::cout << "After 100 reads ! " << std::endl; 
 	for (int i = 0; i < 3; i++){ // 3 is num of axis
 
 		//Could have, for each imu = 0
@@ -149,7 +150,7 @@ void MPU9250::readData(){
 		gyro_raw[imu_1][i] = gyro_merge_buffer[imu_1][i]*250/angularScale; // 250 degreee/s / LSB 
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
-	std::cout << "After 100 reads ! " << std::endl; 
+	
 	
 	/* Dont read mag data now! Check if the other data make sence! 
 	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
