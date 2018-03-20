@@ -148,7 +148,7 @@ void MPU9250::readData(){
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
 
-	std::cout << "Imu 1 Acc_raw z: " << acc_raw[imu_1][z] << " Imu 2 Acc_raw z: " << acc_raw[imu_2][z] << std::endl; 
+	
 	/* Dont read mag data now! Check if the other data make sence! 
 	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
     mag_data_buffer[imu_1][1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
@@ -175,40 +175,46 @@ void MPU9250::readData(){
     */
 	if(calculated_offset){
 		for (int i = 0; i < 3; ++i){
-			acc_raw[imu_1][i] -= acc_offset[imu_1][i];
-			gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
+			//acc_raw[imu_1][i] -= acc_offset[imu_1][i];
+			//gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
+			acc_raw[imu_2][i] -= acc_offset[imu_2][i];
+			gyro_raw[imu_2][i] -= gyro_offset[imu_2][i];
 		} 
-		//std::cout << "Acc raw 1: " << acc_raw[imu_1][z] << " Acc raw 2: "  << acc_raw[imu_1][z] << std::endl
+		std::cout << " Acc x " << acc_raw[imu_2][x] << " Acc y " << acc_raw[imu_2][y] << " Acc z: " << std::endl; 
 	}
 }
 	
 void MPU9250::calculateOffset(){
-	/*int n = 1000; 
+	int n = 1000; 
 	for (int i = 0; i < n; ++i){
-
+		//Read 1000 messages! 
 		readData(); 
 
-		acc_offset[acc_x_mpu_1] += acc_raw[acc_x_mpu_1];
-		acc_offset[acc_x_mpu_2] += acc_raw[acc_x_mpu_2];
-		acc_offset[acc_y_mpu_1] += acc_raw[acc_y_mpu_1];
-		acc_offset[acc_y_mpu_2] += acc_raw[acc_y_mpu_2];
-		acc_offset[acc_z_mpu_1] += acc_raw[acc_z_mpu_1] - gravity;
-		acc_offset[acc_z_mpu_2] += acc_raw[acc_z_mpu_2] - gravity;
+		acc_offset[imu_1][x] += acc_raw[imu_1][x];
+		acc_offset[imu_2][x] += acc_raw[imu_2][x];
+		acc_offset[imu_1][y] += acc_raw[imu_1][y];
+		acc_offset[imu_2][y] += acc_raw[imu_2][y];
+		acc_offset[imu_1][z] += acc_raw[imu_1][z] - gravity;
+		acc_offset[imu_2][z] += acc_raw[imu_2][z] - gravity;
 
-		gyro_offset[gyro_x_mpu_1] += gyro_raw[gyro_x_mpu_1];
-		gyro_offset[gyro_x_mpu_2] += gyro_raw[gyro_x_mpu_2];
-		gyro_offset[gyro_y_mpu_1] += gyro_raw[gyro_y_mpu_1];
-		gyro_offset[gyro_y_mpu_2] += gyro_raw[gyro_y_mpu_2];
-		gyro_offset[gyro_z_mpu_1] += gyro_raw[gyro_z_mpu_1];
-		gyro_offset[gyro_z_mpu_2] += gyro_raw[gyro_z_mpu_2];
+		gyro_offset[imu_1][x] += gyro_raw[imu_1][x];
+		gyro_offset[imu_2][x] += gyro_raw[imu_2][x];
+		gyro_offset[imu_1][y] += gyro_raw[imu_1][y];
+		gyro_offset[imu_2][y] += gyro_raw[imu_2][y];
+		gyro_offset[imu_1][z] += gyro_raw[imu_1][z];
+		gyro_offset[imu_2][z] += gyro_raw[imu_2][z];
 
 	}
-	for (int j = 0; j < 6; ++j){
-		acc_offset[j] = acc_offset[j]/n;
-		gyro_offset[j] = gyro_offset[j]/n; 
+	for (int j = 0; j < 3; j++){
+		
+		acc_offset[imu_1][j] = acc_offset[imu_1][j]; 
+		acc_offset[imu_2][j] = acc_offset[imu_1][j]/n;
+
+		gyro_offset[imu_1][j] = gyro_offset[imu_1][j]/n; 
+		gyro_offset[imu_2][j] = gyro_offset[imu_2][j]/n;
 	}
 
-	calculated_offset = true;*/
+	calculated_offset = true;
 }
 /*
 void MPU9250::calibrateMagnetometer(){
