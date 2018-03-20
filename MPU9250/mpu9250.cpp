@@ -139,8 +139,8 @@ void MPU9250::readData(){
 		acc_raw[imu_1][i] = acc_merge_buffer[imu_1][i]*gravity/accScale; 
 		acc_raw[imu_2][i] = acc_merge_buffer[imu_2][i]*gravity/accScale;
 
-		gyro_raw[imu_1][i] = gyro_merge_buffer[imu_1][i]*250/angularScale; // 250 degreee/s / LSB 
-		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
+		gyro_raw[imu_1][i] = gyro_merge_buffer[imu_1][i]*250.0/angularScale; // 250 degreee/s / LSB 
+		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250.0/angularScale; 
 	}
 	
 	std::cout << " Acc x " << gyro_raw[imu_2][x] << " Acc y " << gyro_raw[imu_2][y] << " Acc z: " << gyro_raw[imu_2][z] << std::endl; 
