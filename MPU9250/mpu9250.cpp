@@ -216,7 +216,7 @@ void MPU9250::calculateOffset(){
 		gyro_offset[imu_1][j] = gyro_offset[imu_1][j]/n; 
 		gyro_offset[imu_2][j] = gyro_offset[imu_2][j]/n;
 	}
-
+	std::cout << "Acc offset in y dir: " << acc_offset[imu_2][y] << std::endl; 
 	calculated_offset = true;
 }
 /*
