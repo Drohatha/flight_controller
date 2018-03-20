@@ -122,7 +122,7 @@ void MPU9250::readData(){
 	// Acc data x axis
 	//Acc and gyro data buffer do not need to be class-members
 	std::cout << "Before read boost"
-	for (int j = 0; j < 100; i++)
+	for (int j = 0; j < 100; j++)
 	{
 		/* code */
 	//Should probably check if the data is ready! Are register for this!
