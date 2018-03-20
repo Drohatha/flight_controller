@@ -148,7 +148,6 @@ void MPU9250::readData(){
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
 
-	std::cout << "Raw y data: " << acc_raw[imu_2][y] << std::endl; 
 	
 	/* Dont read mag data now! Check if the other data make sence! 
 	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
