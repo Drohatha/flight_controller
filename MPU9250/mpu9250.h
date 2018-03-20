@@ -36,9 +36,9 @@ private:
 	double gyro_raw[2][3];
 	double mag_raw[2][3]; 
 
-	double acc_offset[2][3];
-	double gyro_offset[2][3]; 
-	double mag_offset[2][3]; 
+	double acc_offset[2][3] = {{0}};
+	double gyro_offset[2][3] = {{0}}; 
+	double mag_offset[2][3] = {{0}}; 
 };
 
 #endif /* RASP_MPU9250_H */
