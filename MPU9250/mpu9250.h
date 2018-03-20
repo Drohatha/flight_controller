@@ -14,7 +14,7 @@ public:
 	void readData(); 
 	void calculateOffset(); 
 	void calculateEulerAngles();
-	void MPU9250::calibrateMagnetometer()
+	void calibrateMagnetometer()
 
 private:
 	bool calculated_offset;
