@@ -184,7 +184,7 @@ void MPU9250::readData(){
 		std::cout << [imu_1]
 	}
 }
-
+)
 void MPU9250::calculateOffset(){
 	int n = 1000; 
 	for (int i = 0; i < n; ++i){
@@ -213,7 +213,7 @@ void MPU9250::calculateOffset(){
 
 	calculated_offset = true;
 }
-
+/*
 void MPU9250::calibrateMagnetometer(){
 	auto start_time = std::chrono::system_clock::now(); 
 	auto now = std::chrono::system_clock::now(); 
@@ -325,4 +325,4 @@ void MPU9250::timeTest(){
 	std::chrono::duration<double> elapsed_seconds = end - start; 
 
 	std::cout << "Time elapsed is: " << elapsed_seconds << std::endl; 
-}
+}*/
