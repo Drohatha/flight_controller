@@ -143,7 +143,7 @@ void MPU9250::readData(){
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250.0/angularScale; 
 	}
 	
-	std::cout << " Acc x " << gyro_raw[imu_2][x] << " Acc y " << gyro_raw[imu_2][y] << " Acc z: " << gyro_raw[imu_2][z] << std::endl; 
+	
 
 	
 	/* Dont read mag data now! Check if the other data make sence! 
@@ -178,6 +178,7 @@ void MPU9250::readData(){
 			gyro_raw[imu_2][i] -= gyro_offset[imu_2][i];
 
 		} 
+		std::cout << " Acc x " << gyro_raw[imu_2][x] << " Acc y " << gyro_raw[imu_2][y] << " Acc z: " << gyro_raw[imu_2][z] << std::endl; 
 		
 	}
 }
