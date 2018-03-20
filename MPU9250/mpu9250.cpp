@@ -3,8 +3,8 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include <chrono>
-#include <ctime>
+//#include <chrono>
+//#include <ctime>
 
 #include "mpu9250.h"
 
@@ -135,11 +135,11 @@ void MPU9250::readData(){
 	for (int i = 0; i < 3; i++){ // 3 is num of axis
 
 		//Could have, for each imu = 0
-		acc_merge_buffer[imu_1][i] = acc_data_buffer[imu_1][2*i] << 8| acc_data_buffer[imu_1][2*m+1];
-		acc_merge_buffer[imu_2][i] = acc_data_buffer[imu_2][2*i] << 8| acc_data_buffer[imu_2][2*m+1];
+		acc_merge_buffer[imu_1][i] = acc_data_buffer[imu_1][2*i] << 8| acc_data_buffer[imu_1][2*i+1];
+		acc_merge_buffer[imu_2][i] = acc_data_buffer[imu_2][2*i] << 8| acc_data_buffer[imu_2][2*i+1];
 
-		gyro_merge_buffer[imu_1][i] = gyro_data_buffer[imu_1][2*i] << 8| gyro_data_buffer[imu_1][2*m+1];
-		gyro_merge_buffer[imu_2][i] = gyro_data_buffer[imu_2][2*i] << 8| gyro_data_buffer[imu_2][2*m+1];
+		gyro_merge_buffer[imu_1][i] = gyro_data_buffer[imu_1][2*i] << 8| gyro_data_buffer[imu_1][2*i+1];
+		gyro_merge_buffer[imu_2][i] = gyro_data_buffer[imu_2][2*i] << 8| gyro_data_buffer[imu_2][2*i+1];
 
 		acc_raw[imu_1][i] = acc_merge_buffer[imu_1][i]*gravity/accScale; 
 		acc_raw[imu_2][i] = acc_merge_buffer[imu_2][i]*gravity/accScale;
