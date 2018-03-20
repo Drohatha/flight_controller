@@ -131,18 +131,15 @@ void MPU9250::readData(){
 		gyro_data_buffer[imu_1][i] = wiringPiI2CReadReg8(fd_1,GYRO_X_H + i); //Imu 1 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 0-5
 		gyro_data_buffer[imu_2][i] = wiringPiI2CReadReg8(fd_2,GYRO_X_H + i); //Imu 2 gyro Write x_h, x_l, y_h, y_l, z_h,z_l into 6-11
 	}
-	//Acc/gyro_merge buffer do not need to be class-members! 
-	wiringPiI2CReadReg8(fd_3, MAG_STATUS);
-	//Change such that we have a 3 x num_imu matrix! 
 	
 	for (int i = 0; i < 3; i++){ // 3 is num of axis
 
 		//Could have, for each imu = 0
-		acc_merge_buffer[imu_1][i] = acc_data_buffer[imu_1][2*m] << 8| acc_data_buffer[imu_1][2*m+1];
-		acc_merge_buffer[imu_2][i] = acc_data_buffer[imu_2][2*m] << 8| acc_data_buffer[imu_2][2*m+1];
+		acc_merge_buffer[imu_1][i] = acc_data_buffer[imu_1][2*i] << 8| acc_data_buffer[imu_1][2*m+1];
+		acc_merge_buffer[imu_2][i] = acc_data_buffer[imu_2][2*i] << 8| acc_data_buffer[imu_2][2*m+1];
 
-		gyro_merge_buffer[imu_1][i] = gyro_data_buffer[imu_1][2*m] << 8| gyro_data_buffer[imu_1][2*m+1];
-		gyro_merge_buffer[imu_2][i] = gyro_data_buffer[imu_2][2*m] << 8| gyro_data_buffer[imu_2][2*m+1];
+		gyro_merge_buffer[imu_1][i] = gyro_data_buffer[imu_1][2*i] << 8| gyro_data_buffer[imu_1][2*m+1];
+		gyro_merge_buffer[imu_2][i] = gyro_data_buffer[imu_2][2*i] << 8| gyro_data_buffer[imu_2][2*m+1];
 
 		acc_raw[imu_1][i] = acc_merge_buffer[imu_1][i]*gravity/accScale; 
 		acc_raw[imu_2][i] = acc_merge_buffer[imu_2][i]*gravity/accScale;
@@ -181,7 +178,7 @@ void MPU9250::readData(){
 			acc_raw[imu_1][i] -= acc_offset[imu_1][i];
 			gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
 		} 
-		std::cout << [imu_1]
+		//std::cout << "Acc raw 1: " << acc_raw[imu_1][z] << " Acc raw 2: "  << acc_raw[imu_1][z] << std::endl
 	}
 }
 /*
