@@ -190,6 +190,8 @@ void MPU9250::calculateOffset(){
 
 	std::cout << "Before offset cal y: " << acc_offset[imu_2][y] << std::endl; 
 
+	acc_offset = {0}; 
+
 	int n = 1000; 
 	for (int i = 0; i < n; ++i){
 		//Read 1000 messages! 
