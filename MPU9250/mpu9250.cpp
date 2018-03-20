@@ -180,7 +180,7 @@ void MPU9250::readData(){
 			acc_raw[imu_2][i] -= acc_offset[imu_2][i];
 			gyro_raw[imu_2][i] -= gyro_offset[imu_2][i];
 		} 
-		std::cout << " Acc x " << acc_raw[imu_2][x] << " Acc y " << acc_raw[imu_2][y] << " Acc z: " << std::endl; 
+		std::cout << " Acc x " << acc_raw[imu_2][x] << " Acc y " << acc_raw[imu_2][y] << " Acc z: " << acc_raw[imu_2][z] << std::endl; 
 	}
 }
 	
@@ -206,7 +206,7 @@ void MPU9250::calculateOffset(){
 
 	}
 	for (int j = 0; j < 3; j++){
-		
+
 		acc_offset[imu_1][j] = acc_offset[imu_1][j]; 
 		acc_offset[imu_2][j] = acc_offset[imu_1][j]/n;
 
