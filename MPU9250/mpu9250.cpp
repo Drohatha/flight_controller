@@ -181,7 +181,7 @@ void MPU9250::readData(){
 		//std::cout << "Acc raw 1: " << acc_raw[imu_1][z] << " Acc raw 2: "  << acc_raw[imu_1][z] << std::endl
 	}
 }
-/*
+	
 void MPU9250::calculateOffset(){
 	int n = 1000; 
 	for (int i = 0; i < n; ++i){
