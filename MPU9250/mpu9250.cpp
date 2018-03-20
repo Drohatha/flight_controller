@@ -67,18 +67,18 @@
 
 
 enum axis{
-	x,
+	x=0,
 	y,
 	z
 };
 enum imu{
-	imu_1,
+	imu_1=0,
 	imu_2
 };
 
 
 enum mag{
-	mag_x_mpu_1,
+	mag_x_mpu_1=0,
 	mag_x_mpu_2,
 	mag_y_mpu_1,
 	mag_y_mpu_2,
@@ -151,6 +151,8 @@ void MPU9250::readData(){
 		gyro_raw[imu_2][i] = gyro_merge_buffer[imu_2][i]*250/angularScale; 
 	}
 
+	std::cout << "Imu 1 Acc_raw z: " << acc_raw[imu_1][z] << << "Imu 2 Acc_raw z: " acc_raw[imu_2][z] << std::endl; 
+	/* Dont read mag data now! Check if the other data make sence! 
 	mag_data_buffer[imu_1][0] = wiringPiI2CReadReg8(fd_3,MAG_X_H);
     mag_data_buffer[imu_1][1] = wiringPiI2CReadReg8(fd_3,MAG_X_L);
 
@@ -173,17 +175,18 @@ void MPU9250::readData(){
 
     std::cout << " Mag_x: " << mag_raw[mag_x_mpu_1] << " Mag_y: " << mag_raw[mag_y_mpu_1]
     << " Mag_z " << mag_raw[mag_z_mpu_1] << std::endl;
-
+    */
 	if(calculated_offset){
 		for (int i = 0; i < 3; ++i){
 			acc_raw[imu_1][i] -= acc_offset[imu_1][i];
 			gyro_raw[imu_1][i] -= gyro_offset[imu_1][i];
 		} 
+		std::cout << [imu_1]
 	}
 }
 
 void MPU9250::calculateOffset(){
-/*	int n = 1000; 
+	int n = 1000; 
 	for (int i = 0; i < n; ++i){
 
 		readData(); 
@@ -208,7 +211,7 @@ void MPU9250::calculateOffset(){
 		gyro_offset[j] = gyro_offset[j]/n; 
 	}
 
-	calculated_offset = true; */
+	calculated_offset = true;
 }
 
 void MPU9250::calibrateMagnetometer(){
