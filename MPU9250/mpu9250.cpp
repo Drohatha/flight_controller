@@ -183,7 +183,7 @@ void MPU9250::readData(){
 }
 	
 void MPU9250::calculateOffset(){
-	int n = 1000; 
+	/*int n = 1000; 
 	for (int i = 0; i < n; ++i){
 
 		readData(); 
@@ -208,7 +208,7 @@ void MPU9250::calculateOffset(){
 		gyro_offset[j] = gyro_offset[j]/n; 
 	}
 
-	calculated_offset = true;
+	calculated_offset = true;*/
 }
 /*
 void MPU9250::calibrateMagnetometer(){
